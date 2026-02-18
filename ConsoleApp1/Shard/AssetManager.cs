@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,6 +37,22 @@ namespace Shard
             Debug.Log ("No entry for " + asset);
 
             return null;
+        }
+
+        public override List<string> getAssetPathList(string prefix)
+        {
+            List<string> list = new List<string>();
+
+            foreach (string key in assets.Keys)
+            {
+                if (key.StartsWith(prefix))
+                {
+                    list.Add(assets[key]);
+                }
+            }
+
+            list.Sort();
+            return list;
         }
 
         public void walkDirectory (string dir) {

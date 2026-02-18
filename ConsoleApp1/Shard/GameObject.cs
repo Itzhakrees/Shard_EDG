@@ -1,4 +1,4 @@
-﻿/*
+/*
 *
 *   Anything that is going to be an interactable object in your game should extend from GameObject.  
 *       It handles the life-cycle of the objects, some useful general features (such as tags), and serves 
@@ -21,6 +21,29 @@ namespace Shard
         private bool visible;
         private PhysicsBody myBody;
         private List<string> tags;
+        private Animation currentAnimation;
+
+        public void playAnimation(Animation anim)
+        {
+            currentAnimation = anim;
+            if (currentAnimation != null)
+            {
+                currentAnimation.play();
+            }
+        }
+
+        public void updateAnimation()
+        {
+            if (currentAnimation != null)
+            {
+                currentAnimation.update();
+                string sprite = currentAnimation.getCurrentSprite();
+                if (sprite != null)
+                {
+                    Transform.SpritePath = sprite;
+                }
+            }
+        }
 
         public void addTag(string str)
         {
