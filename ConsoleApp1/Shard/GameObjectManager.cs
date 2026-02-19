@@ -50,6 +50,7 @@ namespace Shard
             for (int i = 0; i < myObjects.Count; i++)
             {
                 gob = myObjects[i];
+                gob.physicsUpdateComponents();
                 gob.physicsUpdate();
             }
         }
@@ -73,7 +74,7 @@ namespace Shard
             {
                 gob = myObjects[i];
 
-                gob.updateAnimation();
+                gob.updateComponents();
                 gob.update();
 
                 gob.checkDestroyMe();

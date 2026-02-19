@@ -21,27 +21,40 @@ namespace Shard
         private bool visible;
         private PhysicsBody myBody;
         private List<string> tags;
-        private Animation currentAnimation;
+        private List<Component> components;
 
-        public void playAnimation(Animation anim)
+        public void addComponent(Component c)
         {
-            currentAnimation = anim;
-            if (currentAnimation != null)
+            components.Add(c);
+            c.Owner = this;
+            c.initialize();
+        }
+
+        public T getComponent<T>() where T : Component
+        {
+            foreach (Component c in components)
             {
-                currentAnimation.play();
+                if (c is T)
+                {
+                    return (T)c;
+                }
+            }
+            return null;
+        }
+
+        public void updateComponents()
+        {
+            foreach (Component c in components)
+            {
+                c.update();
             }
         }
 
-        public void updateAnimation()
+        public void physicsUpdateComponents()
         {
-            if (currentAnimation != null)
+            foreach (Component c in components)
             {
-                currentAnimation.update();
-                string sprite = currentAnimation.getCurrentSprite();
-                if (sprite != null)
-                {
-                    Transform.SpritePath = sprite;
-                }
+                c.physicsUpdate();
             }
         }
 
@@ -139,6 +152,7 @@ namespace Shard
 
             ToBeDestroyed = false;
             tags = new List<string>();
+            components = new List<Component>();
 
             this.initialize();
 
