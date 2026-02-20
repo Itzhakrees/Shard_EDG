@@ -73,7 +73,7 @@ namespace Shard
             _linesToDraw = new List<Line>();
             _circlesToDraw = new List<Circle>();
             
-            Shard.GUI.GuiManager.Instance.Initialize(_window);
+            Shard.GUI.GuiManager.Instance.Initialize(_window, _rend);
 
         }
 

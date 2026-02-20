@@ -30,6 +30,11 @@ namespace Shard
             c.initialize();
         }
 
+        public List<Component> GetComponents()
+        {
+            return components;
+        }
+
         public T getComponent<T>() where T : Component
         {
             foreach (Component c in components)

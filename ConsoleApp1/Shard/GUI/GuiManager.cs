@@ -20,6 +20,12 @@ namespace Shard.GUI
 
         public GameObject DragDropObject { get; set; }
 
+        public GameObject SelectedObject
+        {
+            get => _inspector.SelectedObject;
+            set => _inspector.SelectedObject = value;
+        }
+
         public static GuiManager Instance
         {
             get

@@ -77,7 +77,7 @@ namespace Shard.GUI
                 var payload = ImGui.AcceptDragDropPayload("ASSET_PATH");
                 unsafe 
                 {
-                    if (payload.NativePtr != IntPtr.Zero)
+                    if (payload.NativePtr != null)
                     {
                         string path = System.Runtime.InteropServices.Marshal.PtrToStringAnsi(payload.Data);
                         InstantiateAsset(path);

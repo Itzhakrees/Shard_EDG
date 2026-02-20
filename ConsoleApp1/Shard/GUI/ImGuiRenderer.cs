@@ -63,10 +63,12 @@ namespace Shard.GUI
                 case SDL.SDL_EventType.SDL_TEXTINPUT:
                     unsafe
                     {
-                         string text = System.Text.Encoding.UTF8.GetString(e.text.text);
-                         text = text.Trim('\0');
-                         if (text.Length > 0)
-                             io.AddInputCharactersUTF8(text);
+                        byte* ptr = e.text.text;
+                        int len = 0;
+                        while (ptr[len] != 0) len++;
+                        string text = System.Text.Encoding.UTF8.GetString(ptr, len);
+                        if (text.Length > 0)
+                            io.AddInputCharactersUTF8(text);
                     }
                     break;
                 case SDL.SDL_EventType.SDL_KEYDOWN:
@@ -164,14 +166,14 @@ namespace Shard.GUI
             }
         }
 
-        private void RenderDrawData(ImGuiDrawDataPtr drawData)
+        private void RenderDrawData(ImDrawDataPtr drawData)
         {
             if (drawData.DisplaySize.X <= 0 || drawData.DisplaySize.Y <= 0)
                 return;
 
             for (int n = 0; n < drawData.CmdListsCount; n++)
             {
-                ImGuiCmdListPtr cmdList = drawData.CmdLists[n];
+                ImDrawListPtr cmdList = drawData.CmdLists[n];
                 
                 int vtxCount = cmdList.VtxBuffer.Size;
                 int idxCount = cmdList.IdxBuffer.Size;
@@ -191,7 +193,7 @@ namespace Shard.GUI
 
                 for (int cmd_i = 0; cmd_i < cmdList.CmdBuffer.Size; cmd_i++)
                 {
-                    ImGuiCmdPtr pcmd = cmdList.CmdBuffer[cmd_i];
+                    ImDrawCmdPtr pcmd = cmdList.CmdBuffer[cmd_i];
                     if (pcmd.UserCallback != IntPtr.Zero)
                     {
                          // Handle user callback

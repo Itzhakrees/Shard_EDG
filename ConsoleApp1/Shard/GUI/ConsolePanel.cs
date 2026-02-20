@@ -31,7 +31,7 @@ namespace Shard.GUI
 
             ImGui.Separator();
 
-            ImGui.BeginChild("ScrollingRegion", new Vector2(0, 0), false, ImGuiWindowFlags.HorizontalScrollbar);
+            ImGui.BeginChild("ScrollingRegion", new Vector2(0, 0), ImGuiChildFlags.None, ImGuiWindowFlags.HorizontalScrollbar);
 
             var logs = Debug.getInstance().GetLogs();
             lock (logs) // Just in case, though we are single threaded mostly

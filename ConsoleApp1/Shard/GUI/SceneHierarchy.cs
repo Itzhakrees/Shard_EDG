@@ -66,7 +66,7 @@ namespace Shard.GUI
                 var payload = ImGui.AcceptDragDropPayload("GAMEOBJECT");
                 unsafe
                 {
-                    if (payload.NativePtr != IntPtr.Zero)
+                    if (payload.NativePtr != null)
                     {
                         var dropped = GuiManager.Instance.DragDropObject;
                         if (dropped != null && dropped != gob)
