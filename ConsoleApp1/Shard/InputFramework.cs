@@ -1,4 +1,4 @@
-﻿/*
+/*
 *
 *   SDL provides an input layer, and we're using that.  This class tracks input, anchors it to the 
 *       timing of the game loop, and converts the SDL events into one that is more abstract so games 
@@ -42,6 +42,8 @@ namespace Shard
                 {
                     return;
                 }
+                
+                Shard.GUI.GuiManager.Instance.ProcessEvent(ev);
 
                 ie = new InputEvent();
 

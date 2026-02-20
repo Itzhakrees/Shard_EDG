@@ -1,4 +1,4 @@
-﻿/*
+/*
 *
 *   The baseline functionality for getting text to work via SDL.   You could write your own text 
 *       implementation (and we did that earlier in the course), but bear in mind DisplaySDL is built
@@ -14,10 +14,10 @@ using SDL2;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Shard.GUI;
 
 namespace Shard
 {
-
     // We'll be using SDL2 here to provide our underlying graphics system.
     class TextDetails
     {
@@ -70,6 +70,8 @@ namespace Shard
     class DisplayText : Display
     {
         protected IntPtr _window, _rend;
+        public IntPtr Window => _window;
+        public IntPtr Renderer => _rend;
         uint _format;
         int _access;
         private List<TextDetails> myTexts;
@@ -125,8 +127,11 @@ namespace Shard
 
             }
 
-            SDL.SDL_RenderPresent(_rend);
+        }
 
+        public virtual void Present()
+        {
+            SDL.SDL_RenderPresent(_rend);
         }
 
         public override void display()
@@ -134,6 +139,7 @@ namespace Shard
 
             update();
             draw();
+            Present();
         }
 
         public override void setFullscreen()

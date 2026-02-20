@@ -1,4 +1,4 @@
-﻿/*
+/*
 *
 *   The transform class handles position, independent of physics and forces (although the physics
 *       system will make use of the rotation and translation functions here).  Essentially this class
@@ -14,6 +14,7 @@
 
 using System;
 using System.Numerics;
+using System.Collections.Generic;
 
 namespace Shard
 {
@@ -29,6 +30,29 @@ namespace Shard
         private string spritePath;
         private Vector2 forward;
         private Vector2 right, centre;
+        
+        private Transform _parent;
+        private List<Transform> _children = new List<Transform>();
+        
+        public Transform Parent { get => _parent; set => SetParent(value); }
+        public List<Transform> Children => _children;
+
+        public void SetParent(Transform newParent)
+        {
+            if (_parent == newParent) return;
+            
+            if (_parent != null)
+            {
+                _parent._children.Remove(this);
+            }
+            
+            _parent = newParent;
+            
+            if (_parent != null)
+            {
+                _parent._children.Add(this);
+            }
+        }
 
         public Vector2 getLastDirection()
         {
@@ -82,6 +106,10 @@ namespace Shard
             x += (float)nx;
             y += (float)ny;
 
+            foreach(var child in _children)
+            {
+                child.translate(nx, ny);
+            }
 
             recalculateCentre();
         }

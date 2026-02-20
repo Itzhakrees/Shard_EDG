@@ -1,4 +1,4 @@
-﻿/*
+/*
 *
 *   This is the implementation of the Simple Directmedia Layer through C#.   This isn't a course on 
 *       graphics, so we're not going to roll our own implementation.   If you wanted to replace it with 
@@ -58,6 +58,11 @@ namespace Shard
         private List<Line> _linesToDraw;
         private List<Circle> _circlesToDraw;
         private Dictionary<string, IntPtr> spriteBuffer;
+        
+        public float CameraX = 0;
+        public float CameraY = 0;
+        public float Zoom = 1.0f;
+        
         public override void initialize()
         {
             spriteBuffer = new Dictionary<string, IntPtr>();
@@ -67,7 +72,8 @@ namespace Shard
             _toDraw = new List<Transform>();
             _linesToDraw = new List<Line>();
             _circlesToDraw = new List<Circle>();
-
+            
+            Shard.GUI.GuiManager.Instance.Initialize(_window);
 
         }
 
@@ -211,11 +217,12 @@ namespace Shard
 
         public override void display()
         {
+            // Clear current target (Texture)
+            SDL.SDL_SetRenderDrawColor(_rend, 0, 0, 0, 255);
+            SDL.SDL_RenderClear(_rend);
 
             SDL.SDL_Rect sRect;
             SDL.SDL_Rect tRect;
-
-
 
             foreach (Transform trans in _toDraw)
             {
@@ -232,10 +239,11 @@ namespace Shard
                 sRect.w = (int)(trans.Wid * trans.Scalex);
                 sRect.h = (int)(trans.Ht * trans.Scaley);
 
-                tRect.x = (int)trans.X;
-                tRect.y = (int)trans.Y;
-                tRect.w = sRect.w;
-                tRect.h = sRect.h;
+                // Apply Camera
+                tRect.x = (int)((trans.X - CameraX) * Zoom);
+                tRect.y = (int)((trans.Y - CameraY) * Zoom);
+                tRect.w = (int)(sRect.w * Zoom);
+                tRect.h = (int)(sRect.h * Zoom);
 
                 SDL.SDL_RenderCopyEx(_rend, sprite, ref sRect, ref tRect, (int)trans.Rotz, IntPtr.Zero, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
             }
@@ -243,13 +251,20 @@ namespace Shard
             foreach (Circle c in _circlesToDraw)
             {
                 SDL.SDL_SetRenderDrawColor(_rend, (byte)c.R, (byte)c.G, (byte)c.B, (byte)c.A);
-                renderCircle(c.X, c.Y, c.Radius);
+                renderCircle(
+                    (int)((c.X - CameraX) * Zoom), 
+                    (int)((c.Y - CameraY) * Zoom), 
+                    (int)(c.Radius * Zoom)
+                );
             }
 
             foreach (Line l in _linesToDraw)
             {
                 SDL.SDL_SetRenderDrawColor(_rend, (byte)l.R, (byte)l.G, (byte)l.B, (byte)l.A);
-                SDL.SDL_RenderDrawLine(_rend, l.Sx, l.Sy, l.Ex, l.Ey);
+                SDL.SDL_RenderDrawLine(_rend, 
+                    (int)((l.Sx - CameraX) * Zoom), (int)((l.Sy - CameraY) * Zoom),
+                    (int)((l.Ex - CameraX) * Zoom), (int)((l.Ey - CameraY) * Zoom)
+                );
             }
 
             // Show it off.
@@ -260,12 +275,32 @@ namespace Shard
 
         public override void clearDisplay()
         {
+            if (Shard.GUI.GuiManager.Instance.GetViewport() != null)
+            {
+                Shard.GUI.GuiManager.Instance.GetViewport().BeginRender();
+            }
 
             _toDraw.Clear();
             _circlesToDraw.Clear();
             _linesToDraw.Clear();
 
             base.clearDisplay();
+        }
+
+        public override void Present()
+        {
+            if (Shard.GUI.GuiManager.Instance.GetViewport() != null)
+            {
+                Shard.GUI.GuiManager.Instance.GetViewport().EndRender();
+            }
+            
+            // Clear Screen (Editor Background)
+            SDL.SDL_SetRenderDrawColor(_rend, 40, 40, 40, 255);
+            SDL.SDL_RenderClear(_rend);
+
+            Shard.GUI.GuiManager.Instance.Render();
+            
+            SDL.SDL_RenderPresent(_rend);
         }
 
     }

@@ -1,4 +1,4 @@
-﻿/*
+/*
 *
 *   Some handy debug methods.
 *   @author Michael Heron
@@ -40,6 +40,16 @@ namespace Shard
             debugLevel = d;
         }
 
+        public struct LogEntry
+        {
+            public string Message;
+            public int Level;
+            public string Time;
+        }
+
+        private System.Collections.Generic.List<LogEntry> _logs = new System.Collections.Generic.List<LogEntry>();
+        public System.Collections.Generic.List<LogEntry> GetLogs() => _logs;
+
         public void log(string message, int level)
         {
             if (debugLevel == DEBUG_LEVEL_NONE)
@@ -50,6 +60,7 @@ namespace Shard
             if (level <= debugLevel)
             {
                 Console.WriteLine(message);
+                _logs.Add(new LogEntry { Message = message, Level = level, Time = DateTime.Now.ToString("HH:mm:ss") });
             }
         }
 
