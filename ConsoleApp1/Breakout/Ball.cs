@@ -12,11 +12,8 @@ namespace GameBreakout
 
         public override void initialize()
         {
-
-
             this.Transform.SpritePath = Bootstrap.getAssetManager().getAssetPath("ball.png");
             setPhysicsEnabled();
-
 
             MyBody.addCircleCollider();
 
@@ -30,50 +27,30 @@ namespace GameBreakout
             Transform.Scalex = 2;
             Transform.Scaley = 2;
 
-
             Transform.rotate(90);
-
-
         }
 
         public override void update()
         {
-            //            Debug.Log ("" + this);
-
             Bootstrap.getDisplay().addToDraw(this);
-
         }
 
-        public void onCollisionStay(PhysicsBody other)
-        {
-        }
+        public void onCollisionStay(PhysicsBody other) { }
 
         public void onCollisionEnter(PhysicsBody other)
         {
-            
-                        if (other.Parent.checkTag("Paddle"))
-                        {
-//                            Debug.Log ("Hit the Paddle");
-                            Dir = new Vector2(Transform.Centre.X - other.Trans.Centre.X, LastDir.Y * -1);
-                        }
+            if (other.Parent.checkTag("Paddle"))
+            {
+                Dir = new Vector2(Transform.Centre.X - other.Trans.Centre.X, LastDir.Y * -1);
+            }
 
-                        if (other.Parent.checkTag("Brick"))
-                        {
-//                            Debug.Log("Hit the Brick");
+            if (other.Parent.checkTag("Brick"))
+            {
+                // keep default reflect; no extra dir override
+            }
 
-//                            Dir = new Shard.Vector();
-//                            Dir.X = (float)(Transform.Centre.X - other.Trans.Centre.X);
-//                            Dir.Y = (float)(Transform.Centre.Y - other.Trans.Centre.Y);
-
-                        }
-
-              
-
+            // Walls: do nothing; engine reflection handles it
         }
-
-
-
-
 
         public void changeDir(int x, int y)
         {
@@ -91,54 +68,13 @@ namespace GameBreakout
             {
                 dir = new Vector2(dir.X, y);
             }
-
         }
-
 
         public override void physicsUpdate()
         {
-
-
-            if (Transform.Centre.Y - Transform.Ht <= 0)
-            {
-                changeDir(0, 1);
-                Transform.translate(0, -1 * Transform.Centre.Y);
-
-                Debug.Log("Top wall");
-            }
-
-            if (Transform.Centre.Y + Transform.Ht >= Bootstrap.getDisplay().getHeight())
-            {
-                changeDir(0, -1);
-                Transform.translate(0, Transform.Centre.Y - Bootstrap.getDisplay().getHeight());
-
-                Debug.Log("Bottom wall");
-
-            }
-
-
-            if (Transform.Centre.X - Transform.Wid <= 0)
-            {
-                changeDir(1, 0);
-                Transform.translate(-1 * Transform.Centre.X, 0);
-
-                Debug.Log("Left wall");
-
-            }
-
-            if (Transform.Centre.X + Transform.Wid >= Bootstrap.getDisplay().getWidth())
-            {
-                changeDir(-1, 0);
-                Transform.translate(Transform.Centre.X - Bootstrap.getDisplay().getWidth(), 0);
-
-                Debug.Log("Right wall");
-
-            }
-
             if (Dir != Vector2.Zero)
             {
-
-                Dir = Vector2.Normalize (Dir);
+                Dir = Vector2.Normalize(Dir);
 
                 if (Dir.Y > -0.2f && Dir.Y < 0)
                 {
@@ -164,19 +100,13 @@ namespace GameBreakout
                 LastDir = Dir;
                 dir = Vector2.Zero;
             }
-
-        }
-        public void onCollisionExit(PhysicsBody x)
-        {
-
         }
 
+        public void onCollisionExit(PhysicsBody x) { }
 
         public override string ToString()
         {
             return "Ball: [" + Transform.X + ", " + Transform.Y + ", Dir: " + Dir + ", LastDir: " + LastDir + ", " + Transform.Lx + ", " + Transform.Ly + "]";
         }
-
-
     }
 }
