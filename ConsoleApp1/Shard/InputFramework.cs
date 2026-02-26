@@ -45,6 +45,12 @@ namespace Shard
 
                 ie = new InputEvent();
 
+                if (ev.type == SDL.SDL_EventType.SDL_QUIT)
+                {
+                    Bootstrap.requestQuit();
+                    return;
+                }
+
                 if (ev.type == SDL.SDL_EventType.SDL_MOUSEMOTION)
                 {
                     SDL.SDL_MouseMotionEvent mot;
