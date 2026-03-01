@@ -33,6 +33,7 @@ C:\Users\natas\Downloads\shard-main\shard-main\ConsoleApp1\obj\Debug\net8.0-wind
 C:\Users\natas\Downloads\shard-main\shard-main\ConsoleApp1\obj\Debug\net8.0-windows\Shard.pdb
 C:\Users\natas\Downloads\shard-main\shard-main\ConsoleApp1\obj\Debug\net8.0-windows\Shard.genruntimeconfig.cache
 C:\Users\natas\Downloads\shard-main\shard-main\ConsoleApp1\obj\Debug\net8.0-windows\ref\Shard.dll
+<<<<<<< Updated upstream
 D:\Folk\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.csproj.AssemblyReference.cache
 D:\Folk\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.dll
 D:\Folk\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\refint\Shard.dll
@@ -67,3 +68,39 @@ D:\Folk\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.sourcelink.json
 D:\Folk\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.csproj.Up2Date
 D:\Folk\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.genruntimeconfig.cache
 D:\Folk\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\ref\Shard.dll
+=======
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.csproj.AssemblyReference.cache
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\refint\Shard.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.pdb
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libFLAC-8.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libjpeg-9.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libmodplug-1.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libmpg123-0.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libogg-0.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libopus-0.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libopusfile-0.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libpng16-16.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libtiff-5.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libvorbis-0.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\libwebp-7.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\SDL2.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\SDL2_image.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\SDL2_mixer.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\SDL2_ttf.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\zlib1.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\Shard.exe
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\Shard.deps.json
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\Shard.runtimeconfig.json
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\Shard.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\Shard.pdb
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\bin\Debug\net8.0-windows\Sayers.SDL2.Core.dll
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.AssemblyInfoInputs.cache
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.AssemblyInfo.cs
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.csproj.CoreCompileInputs.cache
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.sourcelink.json
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.csproj.Up2Date
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\Shard.genruntimeconfig.cache
+c:\Users\77384\Documents\Codes\Shard_EDG\ConsoleApp1\obj\Debug\net8.0-windows\ref\Shard.dll
+>>>>>>> Stashed changes
