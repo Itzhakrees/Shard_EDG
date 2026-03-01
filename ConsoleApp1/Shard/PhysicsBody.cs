@@ -205,42 +205,21 @@ namespace Shard
 
         public void reflectForces(Vector2 impulse)
         {
-            Vector2 reflect = new Vector2(0, 0);
+            // impulse 是“把我推出去”的方向 * 深度
+            if (impulse.LengthSquared() < 1e-8f)
+                return;
 
-            Debug.Log ("Reflecting " + impulse);
+            // 当前没有速度/力，就没必要反射
+            if (force.LengthSquared() < 1e-8f)
+                return;
 
-            // We're being pushed to the right, so we must have collided with the right.
-            if (impulse.X > 0)
-            {
-                reflect.X = -1;
-            }
+            // n = 单位法线（推出方向）
+            Vector2 n = Vector2.Normalize(impulse);
 
-            // We're being pushed to the left, so we must have collided with the left.
-            if (impulse.X < 0)
-            {
-                reflect.X = -1;
-
-            }
-
-            // We're being pushed upwards, so we must have collided with the top.
-            if (impulse.Y < 0)
-            {
-                reflect.Y = -1;
-            }
-
-            // We're being pushed downwards, so we must have collided with the bottom.
-            if (impulse.Y > 0)
-            {
-                reflect.Y = -1;
-
-            }
-
-
-            force *= reflect;
-
-            Debug.Log("Reflect is " + reflect);
-
+            // 镜面反射：v' = v - 2*(v·n)*n
+            force = force - 2f * Vector2.Dot(force, n) * n;
         }
+
 
         public void reduceForces(float prop) {
             force *= prop;

@@ -37,6 +37,7 @@ namespace Shard
         private static long startTime;
         private static string baseDir;
         private static Dictionary<string,string> enVars;
+        private static bool quitRequested;
 
         public static bool checkEnvironmentalVariable (string id) {
             return enVars.ContainsKey (id);
@@ -236,6 +237,11 @@ namespace Shard
             return frames;
         }
 
+        public static void requestQuit()
+        {
+            quitRequested = true;
+        }
+
         static void Main(string[] args)
         {
             long timeInMillisecondsStart, lastTick, timeInMillisecondsEnd;
@@ -249,6 +255,7 @@ namespace Shard
 
             // Setup the engine.
             setup();
+            quitRequested = false;
 
             // Initialize GUI
             if (getDisplay() is DisplayText dt)
@@ -274,7 +281,7 @@ namespace Shard
                 physDebug = true;
             }
 
-            while (true)
+            while (!quitRequested)
             {
                 frames += 1;
 

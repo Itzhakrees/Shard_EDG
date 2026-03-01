@@ -1,25 +1,24 @@
 ﻿/*
 *
-*   The Shard Physics Manager.   
-*   
-*   As with the PhysicsBody class, upon which this class depends, I make no claims as to the 
-*       accuracy of the physics.  My interest in this course is showing you how an engine is 
-*       architected.  It's not a course on game physics.  The task of making this work in 
-*       a way that simulates real world physics is well beyond the scope of the course. 
-*       
-*   This class is responsible for a lot.  It handles the broad phase collision 
-*       detection (via Sweep and Prune).  It handles the narrow phase collisions, making use of the 
-*       collider objects and the Minkowski differences they generate.  It does some collision resolutions 
-*       that are linked to the mass of colliding bodies.  And it has the management routines that 
+*   The Shard Physics Manager.
+*
+*   As with the PhysicsBody class, upon which this class depends, I make no claims as to the
+*       accuracy of the physics.  My interest in this course is showing you how an engine is
+*       architected.  It's not a course on game physics.  The task of making this work in
+*       a way that simulates real world physics is well beyond the scope of the course.
+*
+*   This class is responsible for a lot.  It handles the broad phase collision
+*       detection (via Sweep and Prune).  It handles the narrow phase collisions, making use of the
+*       collider objects and the Minkowski differences they generate.  It does some collision resolutions
+*       that are linked to the mass of colliding bodies.  And it has the management routines that
 *       let all that happen.
-*       
+*
 *   @author Michael Heron
 *   @version 1.0
-
+*
 *   Several substantial contributions to the code made by others:
 *   @author Mårten Åsberg (see Changelog for 1.0.1)
 *
-*   
 */
 
 using System;
@@ -29,20 +28,17 @@ using System.Numerics;
 
 namespace Shard
 {
-
-
     /*
-     * An internal class used to hold a combination of two potentially colliding objects. 
+     * An internal class used to hold a combination of two potentially colliding objects.
      */
-
     class CollidingObject
     {
         PhysicsBody a, b;
 
-        public CollidingObject() {
-        }
+        public CollidingObject() { }
 
-        public CollidingObject (PhysicsBody x, PhysicsBody y) {
+        public CollidingObject(PhysicsBody x, PhysicsBody y)
+        {
             A = x;
             B = y;
         }
@@ -50,13 +46,15 @@ namespace Shard
         internal PhysicsBody A { get => a; set => a = value; }
         internal PhysicsBody B { get => b; set => b = value; }
 
-        public override bool Equals(object other) {
+        public override bool Equals(object other)
+        {
             return other is CollidingObject co &&
                 (A == co.A && B == co.B ||
-                A == co.B && B == co.A);
+                 A == co.B && B == co.A);
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             return A.GetHashCode() ^ B.GetHashCode();
         }
 
@@ -68,10 +66,9 @@ namespace Shard
 
     /*
      * SAP is Search and Prune, a broad pass collision detection algorithm and the one used
-     * in the course.   This is an internal class used to contain a node in what will be a 
+     * in the course. This is an internal class used to contain a node in what will be a
      * linked list used elsewhere in this code.
      */
-
     class SAPEntry
     {
         PhysicsBody owner;
@@ -85,13 +82,12 @@ namespace Shard
         internal SAPEntry Next { get => next; set => next = value; }
     }
 
-
     class PhysicsManager
     {
         private static PhysicsManager me;
         private List<CollidingObject> collisionsToCheck;
         HashSet<CollidingObject> colliding;
-            
+
         private long timeInterval;
         SAPEntry sapX, sapY;
         float gravityModifier;
@@ -100,6 +96,7 @@ namespace Shard
         List<PhysicsBody> allPhysicsObjects;
         private long lastUpdate;
         private long lastDebugDraw;
+
         private PhysicsManager()
         {
             string tmp = "";
@@ -109,48 +106,45 @@ namespace Shard
             colliding = new HashSet<CollidingObject>();
 
             lastUpdate = Bootstrap.getCurrentMillis();
-
             collisionsToCheck = new List<CollidingObject>();
 
             gravityDir = new Vector2(0, 1);
-            // 50 FPS            
 
+            // 50 FPS
             TimeInterval = 20;
-            
+
             if (Bootstrap.checkEnvironmentalVariable("gravity_modifier"))
             {
-                gravityModifier = float.Parse
-                    (Bootstrap.getEnvironmentalVariable("gravity_modifier"), CultureInfo.InvariantCulture);
+                gravityModifier = float.Parse(
+                    Bootstrap.getEnvironmentalVariable("gravity_modifier"),
+                    CultureInfo.InvariantCulture
+                );
             }
             else
             {
                 gravityModifier = 0.1f;
             }
 
-            if (Bootstrap.checkEnvironmentalVariable("gravity_dir")) {
+            if (Bootstrap.checkEnvironmentalVariable("gravity_dir"))
+            {
                 tmp = Bootstrap.getEnvironmentalVariable("gravity_dir");
-
                 tmpbits = tmp.Split(",");
-
                 gravityDir = new Vector2(int.Parse(tmpbits[0]), int.Parse(tmpbits[1]));
             }
-            else {
-                gravityDir = new Vector2 (0, 1);
+            else
+            {
+                gravityDir = new Vector2(0, 1);
             }
+        }
 
-            
-    }
-
-    public static PhysicsManager getInstance()
+        public static PhysicsManager getInstance()
         {
             if (me == null)
             {
                 me = new PhysicsManager();
             }
-
             return me;
         }
-
 
         public long LastUpdate { get => lastUpdate; set => lastUpdate = value; }
         public long TimeInterval { get => timeInterval; set => timeInterval = value; }
@@ -163,21 +157,16 @@ namespace Shard
             {
                 return;
             }
-
             allPhysicsObjects.Add(body);
-
         }
 
         public void removePhysicsObject(PhysicsBody body)
         {
-                allPhysicsObjects.Remove(body);           
+            allPhysicsObjects.Remove(body);
         }
 
         public void clearList(SAPEntry node)
         {
-            //Let's clear everything so the garbage collector can do its
-            // work
-
             if (node == null)
             {
                 return;
@@ -191,23 +180,17 @@ namespace Shard
             }
 
             node.Previous = null;
-
         }
 
         public SAPEntry addToList(SAPEntry node, SAPEntry entry)
         {
-            SAPEntry current;
+            SAPEntry current = node;
 
-            current = node;
-
-
-            // Start our list.
             if (current == null)
             {
                 return entry;
             }
 
-            // Is this our new head?
             if (entry.Start < current.Start)
             {
                 current.Previous = entry;
@@ -215,30 +198,24 @@ namespace Shard
                 return entry;
             }
 
-            // Look for where we get inserted.
             while (current.Next != null && entry.Start > current.Next.Start)
             {
                 current = current.Next;
             }
 
-
             if (current.Next != null)
             {
-                // Insert ourselves into a chain.
                 entry.Previous = current;
                 entry.Next = current.Next;
                 current.Next = entry;
             }
             else
             {
-                // We're at the end.
                 current.Next = entry;
                 entry.Previous = current;
             }
 
-
             return node;
-
         }
 
         public void outputList(SAPEntry node)
@@ -246,7 +223,6 @@ namespace Shard
             SAPEntry pointer = node;
             int counter = 0;
             string text = "";
-
 
             if (pointer == null)
             {
@@ -262,7 +238,6 @@ namespace Shard
             }
 
             Debug.getInstance().log("List:" + text);
-
         }
 
         public bool willTick()
@@ -271,7 +246,6 @@ namespace Shard
             {
                 return true;
             }
-
             return false;
         }
 
@@ -285,26 +259,19 @@ namespace Shard
                 return false;
             }
 
-            //            Debug.Log("Tick: " + Bootstrap.TimeElapsed);
-
             lastUpdate = Bootstrap.getCurrentMillis();
-
-
             toRemove = new List<CollidingObject>();
 
             foreach (PhysicsBody body in allPhysicsObjects)
             {
-
-                if (body.UsesGravity) {
+                if (body.UsesGravity)
+                {
                     body.applyGravity(gravityModifier, gravityDir);
                 }
 
                 body.physicsTick();
                 body.recalculateColliders();
-
-
             }
-
 
             // Check for old collisions that should be persisted
             foreach (CollidingObject col in colliding)
@@ -313,10 +280,9 @@ namespace Shard
                 ch2 = col.B.Colh;
                 Vector2? impulse;
 
-                // If the object has been destroyed in the interim, it should still 
-                // trigger a collision exit.
-                if (col.A.Parent.ToBeDestroyed) {
-                    ch2.onCollisionExit (null);
+                if (col.A.Parent.ToBeDestroyed)
+                {
+                    ch2.onCollisionExit(null);
                     toRemove.Add(col);
                 }
 
@@ -339,7 +305,6 @@ namespace Shard
                     ch2.onCollisionExit(col.A);
                     toRemove.Add(col);
                 }
-
             }
 
             foreach (CollidingObject col in toRemove)
@@ -348,46 +313,55 @@ namespace Shard
             }
 
             toRemove.Clear();
+
             // Check for new collisions
             checkForCollisions();
 
-
-
-                //            Debug.Log("Time Interval is " + (Bootstrap.getCurrentMillis() - lastUpdate) + ", " + colliding.Count);
-
-
-                return true;
+            return true;
         }
 
         public void drawDebugColliders()
         {
             foreach (PhysicsBody body in allPhysicsObjects)
             {
-                // Debug drawing - always happens.
                 body.drawMe();
             }
         }
 
+        // ============================
+        // CHANGED: choose MTV instead of first hit
+        // ============================
         private Vector2? checkCollisionBetweenObjects(PhysicsBody a, PhysicsBody b)
         {
-            Vector2? impulse;
+            Vector2? best = null;
+            float bestLenSq = float.PositiveInfinity;
 
             foreach (Collider col in a.getColliders())
             {
                 foreach (Collider col2 in b.getColliders())
                 {
-                    impulse = col.checkCollision(col2);
+                    Vector2? impulse = col.checkCollision(col2);
 
+                    if (!impulse.HasValue)
+                        continue;
 
-                    if (impulse != null)
+                    Vector2 v = impulse.Value;
+                    float lenSq = v.LengthSquared();
+
+                    // Ignore degenerate impulses
+                    if (lenSq < 1e-12f)
+                        continue;
+
+                    // Pick the smallest translation vector (MTV)
+                    if (lenSq < bestLenSq)
                     {
-                        return impulse;
+                        bestLenSq = lenSq;
+                        best = v;
                     }
                 }
             }
 
-            return null;
-
+            return best;
         }
 
         // omg this won't scale omg
@@ -397,7 +371,6 @@ namespace Shard
 
             if (allPhysicsObjects.Count < 2)
             {
-                // Nothing to collide.
                 return;
             }
 
@@ -405,7 +378,6 @@ namespace Shard
             {
                 for (int j = 0; j < allPhysicsObjects.Count; j++)
                 {
-
                     if (i == j)
                     {
                         continue;
@@ -422,22 +394,17 @@ namespace Shard
                     }
 
                     tmp = new CollidingObject();
-
                     tmp.A = allPhysicsObjects[i];
                     tmp.B = allPhysicsObjects[j];
 
                     collisionsToCheck.Add(tmp);
-
                 }
             }
-
-//            Debug.Log("Checking " + collisionsToCheck.Count + " collisions");
-
         }
 
-        public bool findColliding(PhysicsBody a, PhysicsBody b) {
-            CollidingObject col = new CollidingObject (a, b);
-              
+        public bool findColliding(PhysicsBody a, PhysicsBody b)
+        {
+            CollidingObject col = new CollidingObject(a, b);
             return colliding.Contains(col);
         }
 
@@ -445,104 +412,92 @@ namespace Shard
         {
             Vector2 impulse;
             Vector2? possibleImpulse;
-            float massTotal, massa, massb;
+            float massTotal;
             float massProp = 0.0f;
 
-            //            Debug.getInstance().log("Active objects " + collisionsToCheck.Count);
+            // ensure each body reflects at most once per physics tick
+            HashSet<PhysicsBody> reflectedThisTick = new HashSet<PhysicsBody>();
 
             foreach (CollidingObject ob in collisionsToCheck)
             {
-
                 possibleImpulse = checkCollisionBetweenObjects(ob.A, ob.B);
 
-                if (possibleImpulse.HasValue)
+                if (!possibleImpulse.HasValue)
+                    continue;
+
+                impulse = possibleImpulse.Value;
+
+                Debug.Log("Col is " + ob + ", impulse " + possibleImpulse);
+
+                // If impulse is tiny, we can skip normal-based epsilon to avoid NaNs
+                Vector2 n = Vector2.Zero;
+                float eps = 0.001f;
+                if (impulse.LengthSquared() > 1e-8f)
+                    n = Vector2.Normalize(impulse);
+
+                if (ob.A.PassThrough != true && ob.B.PassThrough != true)
                 {
-                    impulse = possibleImpulse.Value;
-                    Debug.Log("Col is " + ob + ", impulse " + possibleImpulse);
+                    massTotal = ob.A.Mass + ob.B.Mass;
 
-                    if (ob.A.PassThrough != true && ob.B.PassThrough != true)
+                    // --- First move B ---
+                    if (ob.A.Kinematic)
+                        massProp = 1f;
+                    else
+                        massProp = ob.A.Mass / massTotal;
+
+                    if (ob.A.ImpartForce)
                     {
-
-
-                        massTotal = ob.A.Mass + ob.B.Mass;
-
-                        if (ob.A.Kinematic)
-                        {
-                            massProp = 1;
-                        }
-                        else
-                        {
-                            massProp = ob.A.Mass / massTotal;
-
-                        }
-
-
-                        if (ob.A.ImpartForce)
-                        {
-                            ob.A.impartForces(ob.B, massProp);
-                            ob.A.reduceForces(1.0f - massProp);
-                        }
-
-                        massb = massProp;
-
-                        if (ob.B.Kinematic == false)
-                        {
-                            ob.B.Parent.Transform.translate(-1 * (impulse.X * massProp), -1 * (impulse.Y * massProp));
-                        }
-
-
-                        if (ob.B.Kinematic)
-                        {
-                            massProp = 1;
-                        }
-                        else
-                        {
-                            massProp = 1.0f - massProp;
-                        }
-
-                        massa = massProp;
-
-
-                        if (ob.A.Kinematic == false)
-                        {
-
-                            ob.A.Parent.Transform.translate((impulse.X * massProp), (impulse.Y * massProp));
-                        }
-
-
-                        if (ob.A.StopOnCollision)
-                        {
-                            ob.A.stopForces();
-                        }
-
-                        if (ob.B.StopOnCollision)
-                        {
-                            ob.B.stopForces();
-                        }
-
-
+                        ob.A.impartForces(ob.B, massProp);
+                        ob.A.reduceForces(1.0f - massProp);
                     }
 
-
-                    ((CollisionHandler)ob.A.Parent).onCollisionEnter(ob.B);
-                    ((CollisionHandler)ob.B.Parent).onCollisionEnter(ob.A);
-                    colliding.Add(ob);
-
-
-
-                    if (ob.A.ReflectOnCollision)
-                    {                        
-                        ob.A.reflectForces(impulse);
-                    }
-                    if (ob.B.ReflectOnCollision)
+                    if (!ob.B.Kinematic)
                     {
-                        ob.B.reflectForces(impulse);
+                        float mx = impulse.X * massProp;
+                        float my = impulse.Y * massProp;
+
+                        mx += n.X * eps * massProp;
+                        my += n.Y * eps * massProp;
+
+                        ob.B.Parent.Transform.translate(-mx, -my);
                     }
 
+                    // --- Then move A ---
+                    if (ob.B.Kinematic)
+                        massProp = 1f;
+                    else
+                        massProp = 1.0f - massProp;
 
+                    if (!ob.A.Kinematic)
+                    {
+                        float mx = impulse.X * massProp;
+                        float my = impulse.Y * massProp;
+
+                        mx += n.X * eps * massProp;
+                        my += n.Y * eps * massProp;
+
+                        ob.A.Parent.Transform.translate(mx, my);
+                    }
+
+                    if (ob.A.StopOnCollision) ob.A.stopForces();
+                    if (ob.B.StopOnCollision) ob.B.stopForces();
                 }
 
+                ((CollisionHandler)ob.A.Parent).onCollisionEnter(ob.B);
+                ((CollisionHandler)ob.B.Parent).onCollisionEnter(ob.A);
+                colliding.Add(ob);
 
+                if (ob.A.ReflectOnCollision && !reflectedThisTick.Contains(ob.A))
+                {
+                    ob.A.reflectForces(impulse);
+                    reflectedThisTick.Add(ob.A);
+                }
+
+                if (ob.B.ReflectOnCollision && !reflectedThisTick.Contains(ob.B))
+                {
+                    ob.B.reflectForces(-impulse);
+                    reflectedThisTick.Add(ob.B);
+                }
             }
         }
 
@@ -551,21 +506,17 @@ namespace Shard
             List<SAPEntry> activeObjects;
             List<int> toRemove;
             CollidingObject col;
+
             activeObjects = new List<SAPEntry>();
             toRemove = new List<int>();
             col = new CollidingObject();
 
-
-
             while (start != null)
             {
-
                 activeObjects.Add(start);
-
 
                 for (int i = 0; i < activeObjects.Count; i++)
                 {
-
                     if (start == activeObjects[i])
                     {
                         continue;
@@ -594,13 +545,8 @@ namespace Shard
                         {
                             collisionsToCheck.Add(col);
                         }
-                        // Debug.getInstance().log("Adding potential collision: " + col.ToString());
-
                     }
-
-
                 }
-
 
                 for (int j = toRemove.Count - 1; j >= 0; j--)
                 {
@@ -608,24 +554,16 @@ namespace Shard
                 }
 
                 toRemove.Clear();
-
                 start = start.Next;
-
             }
-
-            //            Debug.Log("Checking " + collisionsToCheck.Count + " collisions");
-
         }
-
 
         public void broadPassSearchAndSweep()
         {
-            SAPEntry sx, sy;
-            float[] x, y;
+            SAPEntry sx;
+            float[] x;
             sapX = null;
             sapY = null;
-            List<PhysicsBody> candidates = new List<PhysicsBody>();
-
 
             foreach (PhysicsBody body in allPhysicsObjects)
             {
@@ -637,42 +575,24 @@ namespace Shard
                 sx.Start = x[0];
                 sx.End = x[1];
 
-
                 sapX = addToList(sapX, sx);
-
             }
-
-            //            outputList (sapX);
-            // What we have at this point is a sorted linked list of all
-            // our objects in order.  So now we go over them all to see 
-            // what are viable collision candidates.  If they don't overlap 
-            // in the axis, they can't collide so don't bother checking them.
-
-            // Now we find all the candidates that overlap in 
-            // the Y axis from those that overlap in the X axis.
-            // A two pass sweep and prune.
 
             reportCollisionsInAxis(sapX);
             clearList(sapX);
-
         }
+
         public void broadPass()
         {
             broadPassSearchAndSweep();
-//          broadPassBruteForce();
+            // broadPassBruteForce();
         }
-
-
 
         private void checkForCollisions()
         {
             broadPass();
             narrowPass();
-
             collisionsToCheck.Clear();
-
-
         }
-
     }
 }
