@@ -1,0 +1,65 @@
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.cache
+*.xml
+*.pdb
+
+# Compiled binaries and objects
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.mdb
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mono Develop
+*.userprefs
+*.usertasks
+
+# Rider
+.idea/
+*.sln.iml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]elease[0-9]*/
+[Xx]64/
+[Xx]86/
+[Bb]uild/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# NuGet
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Test results
+TestResult.xml
+TestResult/
+
+# Config files (if they contain local secrets/paths)
+# config.cfg
+# envar.cfg
+# Uncomment the above if they are local-only
