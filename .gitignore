@@ -59,6 +59,10 @@ packages/
 TestResult.xml
 TestResult/
 
+# ConsoleApp1 specific - ignore bin/Debug and obj directories
+ConsoleApp1/bin/Debug/
+ConsoleApp1/obj/
+
 # Config files (if they contain local secrets/paths)
 # config.cfg
 # envar.cfg
