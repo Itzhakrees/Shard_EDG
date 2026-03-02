@@ -4,6 +4,7 @@ using SDL2;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Numerics;
+using System.IO;
 
 namespace Shard.GUI
 {
@@ -140,12 +141,26 @@ namespace Shard.GUI
         public void Render()
         {
             ImGui.Render();
+            SDL.SDL_SetRenderDrawBlendMode(_renderer, SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
             RenderDrawData(ImGui.GetDrawData());
         }
 
         private void CreateDeviceObjects()
         {
             var io = ImGui.GetIO();
+            string fontsDir = Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
+            string segoeUi = Path.Combine(fontsDir, "segoeui.ttf");
+
+            io.Fonts.Clear();
+            if (File.Exists(segoeUi))
+            {
+                io.Fonts.AddFontFromFileTTF(segoeUi, 16.0f);
+            }
+            else
+            {
+                io.Fonts.AddFontDefault();
+            }
+
             unsafe
             {
                 byte* pixels;
@@ -153,7 +168,8 @@ namespace Shard.GUI
                 io.Fonts.GetTexDataAsRGBA32(out pixels, out width, out height);
 
                 // Create Texture
-                _fontTexture = SDL.SDL_CreateTexture(_renderer, SDL.SDL_PIXELFORMAT_RGBA8888, (int)SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_STATIC, width, height);
+                _fontTexture = SDL.SDL_CreateTexture(_renderer, SDL.SDL_PIXELFORMAT_ABGR8888, (int)SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_STATIC, width, height);
+                SDL.SDL_SetTextureBlendMode(_fontTexture, SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
                 
                 // Upload
                 SDL.SDL_UpdateTexture(_fontTexture, IntPtr.Zero, (IntPtr)pixels, width * 4);
@@ -183,10 +199,18 @@ namespace Shard.GUI
                 for (int i = 0; i < vtxCount; i++)
                 {
                     var v = cmdList.VtxBuffer[i];
+                    uint c = v.col;
                     sdlVertices[i] = new SDL.SDL_Vertex
                     {
                         position = new SDL.SDL_FPoint { x = v.pos.X, y = v.pos.Y },
-                        color = new SDL.SDL_Color { r = (byte)(v.col & 0xFF), g = (byte)((v.col >> 8) & 0xFF), b = (byte)((v.col >> 16) & 0xFF), a = (byte)((v.col >> 24) & 0xFF) },
+                        color = new SDL.SDL_Color
+                        {
+                            // ImGui packs colors as ABGR (IM_COL32): low byte is red.
+                            r = (byte)(c & 0xFF),
+                            g = (byte)((c >> 8) & 0xFF),
+                            b = (byte)((c >> 16) & 0xFF),
+                            a = (byte)((c >> 24) & 0xFF)
+                        },
                         tex_coord = new SDL.SDL_FPoint { x = v.uv.X, y = v.uv.Y }
                     };
                 }

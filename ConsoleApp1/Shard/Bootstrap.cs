@@ -1,4 +1,4 @@
-/*
+﻿/*
 *
 *   The Bootstrap - this loads the config file, processes it and then starts the game loop
 *   @author Michael Heron
@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using Shard.GUI;
 
 namespace Shard
 {
@@ -256,12 +255,6 @@ namespace Shard
             // Setup the engine.
             setup();
             quitRequested = false;
-
-            // Initialize GUI
-            if (getDisplay() is DisplayText dt)
-            {
-                GuiManager.Instance.Initialize(dt.Window, dt.Renderer);
-            }
 
             // When we start the program running.
             startTime = getCurrentMillis();
