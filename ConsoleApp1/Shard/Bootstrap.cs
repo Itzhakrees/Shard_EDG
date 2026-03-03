@@ -37,6 +37,8 @@ namespace Shard
         private static string baseDir;
         private static Dictionary<string,string> enVars;
         private static bool quitRequested;
+        private static bool playMode;
+        private static string currentScenePath;
 
         public static bool checkEnvironmentalVariable (string id) {
             return enVars.ContainsKey (id);
@@ -56,6 +58,36 @@ namespace Shard
 
         public static string getBaseDir() {
             return baseDir;
+        }
+
+        public static string getScenePath()
+        {
+            if (!string.IsNullOrWhiteSpace(currentScenePath))
+            {
+                return currentScenePath;
+            }
+
+            string sceneFile = "scene.json";
+            if (checkEnvironmentalVariable("scene_file"))
+            {
+                string cfg = getEnvironmentalVariable("scene_file");
+                if (!string.IsNullOrWhiteSpace(cfg))
+                {
+                    sceneFile = cfg.Trim();
+                }
+            }
+
+            return Path.Combine(baseDir, "Assets", "Scenes", sceneFile);
+        }
+
+        public static void setScenePath(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return;
+            }
+
+            currentScenePath = path;
         }
 
         public static void setup()
@@ -241,6 +273,69 @@ namespace Shard
             quitRequested = true;
         }
 
+        public static bool IsPlayMode()
+        {
+            return playMode;
+        }
+
+        public static void StartPlayMode()
+        {
+            if (playMode)
+            {
+                return;
+            }
+
+            GameObjectManager.getInstance().BeginPlaySnapshot();
+            PhysicsManager.getInstance().clearSimulationState();
+            playMode = true;
+            Debug.getInstance().log("Editor state: PLAY");
+        }
+
+        public static void StopPlayMode()
+        {
+            if (!playMode)
+            {
+                return;
+            }
+
+            playMode = false;
+            GameObjectManager.getInstance().RestorePlaySnapshot();
+            PhysicsManager.getInstance().clearSimulationState();
+            Debug.getInstance().log("Editor state: EDIT");
+        }
+
+        public static void TogglePlayMode()
+        {
+            if (playMode)
+            {
+                StopPlayMode();
+            }
+            else
+            {
+                StartPlayMode();
+            }
+        }
+
+        private static void drawEditorScene()
+        {
+            foreach (GameObject gob in GameObjectManager.getInstance().GetGameObjects())
+            {
+                if (gob == null || gob.Transform == null)
+                {
+                    continue;
+                }
+
+                gob.editorUpdate();
+
+                if (string.IsNullOrEmpty(gob.Transform.SpritePath))
+                {
+                    continue;
+                }
+
+                Bootstrap.getDisplay().addToDraw(gob);
+            }
+        }
+
         static void Main(string[] args)
         {
             long timeInMillisecondsStart, lastTick, timeInMillisecondsEnd;
@@ -255,6 +350,8 @@ namespace Shard
             // Setup the engine.
             setup();
             quitRequested = false;
+            playMode = false;
+            currentScenePath = null;
 
             // When we start the program running.
             startTime = getCurrentMillis();
@@ -283,42 +380,65 @@ namespace Shard
                 // Clear the screen.
                 Bootstrap.getDisplay().clearDisplay();
 
-                // Update 
-                runningGame.update();
-
                 // Input
                 // Get input, which works at 50 FPS to make sure it doesn't interfere with the 
                 // variable frame rates.
                 input.getInput();
 
-                if (runningGame.isRunning() == true)
+                if (playMode)
                 {
-                    // Update runs as fast as the system lets it.  Any kind of movement or counter 
-                    // increment should be based then on the deltaTime variable.
-                    GameObjectManager.getInstance().update();
+                    // Game logic only advances in PLAY mode.
+                    runningGame.update();
 
-                    // This will update every 20 milliseconds or thereabouts.  Our physics system aims 
-                    // at a 50 FPS cycle.
-                    if (phys.willTick())
+                    if (runningGame.isRunning() == true)
                     {
-                        GameObjectManager.getInstance().prePhysicsUpdate();
-                    }
+                        // Update runs as fast as the system lets it.  Any kind of movement or counter 
+                        // increment should be based then on the deltaTime variable.
+                        GameObjectManager.getInstance().update();
 
-                    // Update the physics.  If it's too soon, it'll return false.   Otherwise 
-                    // it'll return true.
-                    physUpdate = phys.update();
+                        // This will update every 20 milliseconds or thereabouts.  Our physics system aims 
+                        // at a 50 FPS cycle.
+                        if (phys.willTick())
+                        {
+                            GameObjectManager.getInstance().prePhysicsUpdate();
+                        }
 
-                    if (physUpdate)
-                    {
-                        // If it did tick, give every object an update
-                        // that is pinned to the timing of the physics system.
-                        GameObjectManager.getInstance().physicsUpdate();
+                        // Update the physics.  If it's too soon, it'll return false.   Otherwise 
+                        // it'll return true.
+                        physUpdate = phys.update();
+
+                        if (physUpdate)
+                        {
+                            // If it did tick, give every object an update
+                            // that is pinned to the timing of the physics system.
+                            GameObjectManager.getInstance().physicsUpdate();
+                        }
+
+                        if (physDebug) {
+                            phys.drawDebugColliders();
+                        }
                     }
+                }
+                else
+                {
+                    // In EDIT mode we render current scene state without advancing gameplay.
+                    runningGame.editorUpdate();
+                    drawEditorScene();
 
                     if (physDebug) {
                         phys.drawDebugColliders();
                     }
+                }
 
+                if (runningGame.isRunning() == true)
+                {
+                    Bootstrap.getDisplay().showText(
+                        "Mode: " + (playMode ? "PLAY" : "EDIT"),
+                        10,
+                        10,
+                        12,
+                        220, 220, 220
+                    );
                 }
 
                 // Render the screen.

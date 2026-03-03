@@ -70,6 +70,7 @@ namespace Shard
     class DisplayText : Display
     {
         protected IntPtr _window, _rend;
+        private bool _isFullscreen;
         public IntPtr Window => _window;
         public IntPtr Renderer => _rend;
         uint _format;
@@ -146,13 +147,28 @@ namespace Shard
         {
             SDL.SDL_SetWindowFullscreen(_window,
                  (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP);
+            _isFullscreen = true;
+        }
+
+        public override void toggleFullscreen()
+        {
+            if (_isFullscreen)
+            {
+                SDL.SDL_SetWindowFullscreen(_window, 0);
+                _isFullscreen = false;
+            }
+            else
+            {
+                SDL.SDL_SetWindowFullscreen(_window, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP);
+                _isFullscreen = true;
+            }
         }
 
         public override void initialize()
         {
             fontLibrary = new Dictionary<string, IntPtr>();
 
-            setSize(1280, 864);
+            setSize(1920, 1080);
 
             SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING);
             SDL_ttf.TTF_Init();
@@ -161,7 +177,7 @@ namespace Shard
                 SDL.SDL_WINDOWPOS_CENTERED,
                 getWidth(),
                 getHeight(),
-                0);
+                SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
 
             _rend = SDL.SDL_CreateRenderer(_window,
@@ -175,6 +191,7 @@ namespace Shard
 
 
             myTexts = new List<TextDetails>();
+            _isFullscreen = false;
         }
 
 

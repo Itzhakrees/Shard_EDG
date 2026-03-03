@@ -47,6 +47,14 @@ namespace Shard
             }
         }
 
+        public virtual void drawFilledRect(int x, int y, int w, int h, int r, int g, int b, int a)
+        {
+            for (int row = 0; row < h; row++)
+            {
+                drawLine(x, y + row, x + w - 1, y + row, r, g, b, a);
+            }
+        }
+
         public void showText(string text, double x, double y, int size, Color col)
         {
             showText(text, x, y, size, col.R, col.G, col.B);
@@ -55,6 +63,10 @@ namespace Shard
 
 
         public virtual void setFullscreen()
+        {
+        }
+
+        public virtual void toggleFullscreen()
         {
         }
 

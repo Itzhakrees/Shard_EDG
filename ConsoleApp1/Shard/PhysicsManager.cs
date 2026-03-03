@@ -249,6 +249,13 @@ namespace Shard
             return false;
         }
 
+        public void clearSimulationState()
+        {
+            collisionsToCheck.Clear();
+            colliding.Clear();
+            lastUpdate = Bootstrap.getCurrentMillis();
+        }
+
         public bool update()
         {
             CollisionHandler ch, ch2;

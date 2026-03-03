@@ -14,6 +14,11 @@ namespace Shard.GUI
         {
             ImGui.Begin("Inspector");
 
+            if (_selectedObject != null && _selectedObject.Transform == null)
+            {
+                _selectedObject = null;
+            }
+
             if (_selectedObject != null)
             {
                 // Draw name or ID
@@ -69,6 +74,11 @@ namespace Shard.GUI
                     if (ImGui.Selectable("AnimationComponent"))
                     {
                         _selectedObject.addComponent(new AnimationComponent());
+                    }
+
+                    if (ImGui.Selectable("SpawnerComponent"))
+                    {
+                        _selectedObject.addComponent(new SpawnerComponent());
                     }
                     // Add more
                     ImGui.EndPopup();

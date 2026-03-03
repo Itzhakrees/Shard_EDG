@@ -26,6 +26,13 @@ namespace Shard.GUI
                 {
                     new GameObject();
                 }
+
+                if (ImGui.MenuItem("Create 2D Cube"))
+                {
+                    Cube2D cube = new Cube2D();
+                    cube.Transform.X = 200;
+                    cube.Transform.Y = 200;
+                }
                 ImGui.EndPopup();
             }
 

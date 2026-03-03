@@ -7,18 +7,23 @@ using GameTest;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 
 namespace Shard
 {
-    class GameTest : Game, InputListener
+    class GameTest : Game
     {
         GameObject background;
-        List<GameObject> asteroids;
         public override void update()
         {
             
             Bootstrap.getDisplay().showText("FPS: " + Bootstrap.getSecondFPS() + " / " + Bootstrap.getFPS(), 10, 10, 12, 255, 255, 255);
-            Bootstrap.getDisplay().addToDraw(background);
+            EnsureBackgroundReference();
+
+            if (background != null && background.Transform != null && !string.IsNullOrEmpty(background.Transform.SpritePath))
+            {
+                Bootstrap.getDisplay().addToDraw(background);
+            }
 
         }
 
@@ -27,63 +32,74 @@ namespace Shard
             return 100;
 
         }
-        public void createShip()
+        private void CreateDefaultScene()
         {
-            GameObject ship = new Spaceship();
-            Random rand = new Random();
-            int offsetx = 0, offsety = 0;
-
-            GameObject asteroid;
-
-
-
-    
-//            asteroid.MyBody.Kinematic = true;
-     
-
+            GameObjectManager.getInstance().ClearScene();
 
             background = new GameObject();
             background.Transform.SpritePath = getAssetManager().getAssetPath ("background2.jpg");
             background.Transform.X = 0;
             background.Transform.Y = 0;
-            
+
+            GameObject ship = new Spaceship();
+            ship.Transform.X = 500f;
+            ship.Transform.Y = 500f;
+
+            GameObject spawner = new GameObject();
+            spawner.addComponent(new SpawnerComponent());
         }
 
         public override void initialize()
         {
-            Bootstrap.getInput().addListener(this);
-            createShip();
+            string scenePath = Bootstrap.getScenePath();
+            Bootstrap.setScenePath(scenePath);
+            bool loaded = GameObjectManager.getInstance().LoadSceneFromFile(scenePath);
 
-            asteroids = new List<GameObject>();
+            if (!loaded)
+            {
+                CreateDefaultScene();
+                GameObjectManager.getInstance().SaveSceneToFile(scenePath);
+            }
 
-
+            foreach (GameObject gob in GameObjectManager.getInstance().GetGameObjects())
+            {
+                if (gob.Transform != null && gob.Transform.SpritePath != null && gob.Transform.SpritePath.EndsWith("background2.jpg"))
+                {
+                    background = gob;
+                    break;
+                }
+            }
         }
 
-        public void handleInput(InputEvent inp, string eventType)
+        public override void editorUpdate()
         {
+            EnsureBackgroundReference();
+        }
 
-            if (eventType == "MouseDown") {
-                Console.WriteLine ("Pressing button " + inp.Button);
+        private void EnsureBackgroundReference()
+        {
+            if (background != null && background.Transform != null && !string.IsNullOrEmpty(background.Transform.SpritePath))
+            {
+                return;
             }
 
-            if (eventType == "MouseDown" && inp.Button == 1)
-            {
-                Asteroid asteroid = new Asteroid();
-                asteroid.Transform.X = inp.X;
-                asteroid.Transform.Y = inp.Y;
-                asteroids.Add (asteroid);
-            }
+            background = null;
 
-            if (eventType == "MouseDown" && inp.Button == 3)
+            foreach (GameObject gob in GameObjectManager.getInstance().GetGameObjects())
             {
-                foreach (GameObject ast in asteroids) {
-                    ast.ToBeDestroyed = true;
+                if (gob == null || gob.Transform == null || string.IsNullOrEmpty(gob.Transform.SpritePath))
+                {
+                    continue;
                 }
 
-                asteroids.Clear();
+                string name = Path.GetFileName(gob.Transform.SpritePath);
+                if (string.Equals(name, "background2.jpg", StringComparison.OrdinalIgnoreCase))
+                {
+                    background = gob;
+                    break;
+                }
             }
-
-
         }
+
     }
 }

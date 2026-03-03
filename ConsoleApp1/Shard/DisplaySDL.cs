@@ -51,12 +51,25 @@ namespace Shard
         public int A { get => a; set => a = value; }
     }
 
+    class FilledRect
+    {
+        public int X;
+        public int Y;
+        public int W;
+        public int H;
+        public int R;
+        public int G;
+        public int B;
+        public int A;
+    }
+
 
     class DisplaySDL : DisplayText
     {
         private List<Transform> _toDraw;
         private List<Line> _linesToDraw;
         private List<Circle> _circlesToDraw;
+        private List<FilledRect> _filledRectsToDraw;
         private Dictionary<string, IntPtr> spriteBuffer;
         
         public float CameraX = 0;
@@ -72,6 +85,7 @@ namespace Shard
             _toDraw = new List<Transform>();
             _linesToDraw = new List<Line>();
             _circlesToDraw = new List<Circle>();
+            _filledRectsToDraw = new List<FilledRect>();
             
             Shard.GUI.GuiManager.Instance.Initialize(_window, _rend);
 
@@ -215,6 +229,26 @@ namespace Shard
             _linesToDraw.Add(l);
         }
 
+        public override void drawFilledRect(int x, int y, int w, int h, int r, int g, int b, int a)
+        {
+            if (w <= 0 || h <= 0)
+            {
+                return;
+            }
+
+            _filledRectsToDraw.Add(new FilledRect
+            {
+                X = x,
+                Y = y,
+                W = w,
+                H = h,
+                R = r,
+                G = g,
+                B = b,
+                A = a
+            });
+        }
+
         public override void display()
         {
             // Clear current target (Texture)
@@ -258,6 +292,19 @@ namespace Shard
                 );
             }
 
+            foreach (FilledRect fr in _filledRectsToDraw)
+            {
+                SDL.SDL_SetRenderDrawColor(_rend, (byte)fr.R, (byte)fr.G, (byte)fr.B, (byte)fr.A);
+                SDL.SDL_Rect rect = new SDL.SDL_Rect
+                {
+                    x = (int)MathF.Round((fr.X - CameraX) * Zoom),
+                    y = (int)MathF.Round((fr.Y - CameraY) * Zoom),
+                    w = Math.Max(1, (int)MathF.Round(fr.W * Zoom)),
+                    h = Math.Max(1, (int)MathF.Round(fr.H * Zoom))
+                };
+                SDL.SDL_RenderFillRect(_rend, ref rect);
+            }
+
             foreach (Line l in _linesToDraw)
             {
                 SDL.SDL_SetRenderDrawColor(_rend, (byte)l.R, (byte)l.G, (byte)l.B, (byte)l.A);
@@ -282,6 +329,7 @@ namespace Shard
 
             _toDraw.Clear();
             _circlesToDraw.Clear();
+            _filledRectsToDraw.Clear();
             _linesToDraw.Clear();
 
             base.clearDisplay();

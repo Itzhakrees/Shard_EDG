@@ -8,6 +8,10 @@ namespace GameTest
         int torqueCounter = 0;
         public void handleInput(InputEvent inp, string eventType)
         {
+            if (!Bootstrap.IsPlayMode())
+            {
+                return;
+            }
 
             if (eventType == "MouseDown" && inp.Button == 2)
             {

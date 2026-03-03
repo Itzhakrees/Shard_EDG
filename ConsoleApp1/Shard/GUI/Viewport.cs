@@ -9,6 +9,7 @@ namespace Shard.GUI
         private IntPtr _framebufferTexture;
         private int _width, _height;
         private IntPtr _renderer;
+        private bool _autoFitView = true;
 
         public Viewport(IntPtr renderer)
         {
@@ -58,12 +59,19 @@ namespace Shard.GUI
         {
             ImGui.Begin("Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
+            DrawViewportToolbar();
+
             var size = ImGui.GetContentRegionAvail();
+
+            if (size.X < 1f) size.X = 1f;
+            if (size.Y < 1f) size.Y = 1f;
             
             if ((int)size.X != _width || (int)size.Y != _height)
             {
                 Resize((int)size.X, (int)size.Y);
             }
+
+            ApplyAutoFitCamera(size.X, size.Y);
             
             // Render Image
             ImGui.Image(_framebufferTexture, size);
@@ -94,6 +102,11 @@ namespace Shard.GUI
 
         private void HandleCameraInput()
         {
+            if (_autoFitView)
+            {
+                return;
+            }
+
             if (ImGui.IsItemHovered())
             {
                 var io = ImGui.GetIO();
@@ -163,6 +176,66 @@ namespace Shard.GUI
              drawList.AddLine(new System.Numerics.Vector2(screenX, screenY), 
                               new System.Numerics.Vector2(screenX, screenY + 50), 
                               ImGui.GetColorU32(new System.Numerics.Vector4(0,1,0,1)), 3.0f);
+        }
+
+        private void DrawViewportToolbar()
+        {
+            bool autoFit = _autoFitView;
+            if (ImGui.Checkbox("Auto Fit", ref autoFit))
+            {
+                _autoFitView = autoFit;
+            }
+
+            ImGui.SameLine();
+            if (ImGui.Button("Reset View"))
+            {
+                var display = Bootstrap.getDisplay() as DisplaySDL;
+                if (display != null)
+                {
+                    display.CameraX = 0f;
+                    display.CameraY = 0f;
+                    display.Zoom = 1f;
+                }
+            }
+
+            ImGui.Separator();
+        }
+
+        private void ApplyAutoFitCamera(float viewportW, float viewportH)
+        {
+            if (!_autoFitView)
+            {
+                return;
+            }
+
+            var display = Bootstrap.getDisplay() as DisplaySDL;
+            if (display == null)
+            {
+                return;
+            }
+
+            float designW = Bootstrap.getDisplay().getWidth();
+            float designH = Bootstrap.getDisplay().getHeight();
+            if (designW <= 1f || designH <= 1f)
+            {
+                return;
+            }
+
+            // Auto Fit: keep aspect ratio and ensure full scene is visible.
+            float fitZoom = Math.Min(viewportW / designW, viewportH / designH);
+            if (fitZoom <= 0.01f)
+            {
+                fitZoom = 0.01f;
+            }
+
+            float drawW = designW * fitZoom;
+            float drawH = designH * fitZoom;
+            float offsetX = (viewportW - drawW) * 0.5f;
+            float offsetY = (viewportH - drawH) * 0.5f;
+
+            display.Zoom = fitZoom;
+            display.CameraX = -offsetX / fitZoom;
+            display.CameraY = -offsetY / fitZoom;
         }
     }
 }

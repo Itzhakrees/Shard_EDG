@@ -25,6 +25,9 @@ namespace Shard
 
         public abstract void initialize();
         public abstract void update();
+        public virtual void editorUpdate()
+        {
+        }
 
         public virtual bool isRunning()
         {

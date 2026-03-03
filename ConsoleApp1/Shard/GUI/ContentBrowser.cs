@@ -68,7 +68,12 @@ namespace Shard.GUI
                 {
                     var fileName = Path.GetFileName(file);
                     ImGui.PushID(fileName);
-                    ImGui.Button(fileName, new Vector2(thumbnailSize, thumbnailSize));
+                    bool clicked = ImGui.Button(fileName, new Vector2(thumbnailSize, thumbnailSize));
+
+                    if (clicked)
+                    {
+                        HandleFileClick(file);
+                    }
 
                     if (ImGui.BeginDragDropSource())
                     {
@@ -96,6 +101,45 @@ namespace Shard.GUI
             ImGui.Columns(1);
 
             ImGui.End();
+        }
+
+        private void HandleFileClick(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return;
+            }
+
+            if (Bootstrap.IsPlayMode())
+            {
+                Debug.getInstance().log("Cannot load scene while in PLAY mode. Stop first.", Debug.DEBUG_LEVEL_WARNING);
+                return;
+            }
+
+            string ext = Path.GetExtension(filePath);
+            if (!string.Equals(ext, ".json", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            string scenesFolder = Path.Combine(Bootstrap.getBaseDir(), "Assets", "Scenes");
+            bool isSceneFile = filePath.StartsWith(scenesFolder, StringComparison.OrdinalIgnoreCase);
+            if (!isSceneFile)
+            {
+                return;
+            }
+
+            bool ok = GameObjectManager.getInstance().LoadSceneFromFile(filePath);
+            if (ok)
+            {
+                Bootstrap.setScenePath(filePath);
+                GuiManager.Instance.GetInspector().SelectedObject = null;
+                Debug.getInstance().log("Scene loaded: " + filePath);
+            }
+            else
+            {
+                Debug.getInstance().log("Scene load failed: " + filePath, Debug.DEBUG_LEVEL_ERROR);
+            }
         }
     }
 }

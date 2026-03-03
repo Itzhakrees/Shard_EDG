@@ -60,6 +60,10 @@ namespace GameTest
 
         public void handleInput(InputEvent inp, string eventType)
         {
+            if (!Bootstrap.IsPlayMode())
+            {
+                return;
+            }
 
 
 

@@ -3,6 +3,7 @@ using ImGuiNET;
 using SDL2;
 using System.Collections.Generic;
 using System.Numerics;
+using System.IO;
 
 namespace Shard.GUI
 {
@@ -164,9 +165,31 @@ namespace Shard.GUI
 
         private void HandleEditorShortcuts()
         {
+            ImGuiIOPtr io = ImGui.GetIO();
+
             if (ImGui.IsKeyPressed(ImGuiKey.F11, false))
             {
                 ToggleFullscreen();
+            }
+
+            if (ImGui.IsKeyPressed(ImGuiKey.F5, false))
+            {
+                Bootstrap.TogglePlayMode();
+            }
+
+            if (!Bootstrap.IsPlayMode() && io.KeyCtrl && ImGui.IsKeyPressed(ImGuiKey.S, false))
+            {
+                string path = Bootstrap.getScenePath();
+                bool ok = GameObjectManager.getInstance().SaveSceneToFile(path);
+
+                if (ok)
+                {
+                    Debug.getInstance().log("Scene saved: " + path);
+                }
+                else
+                {
+                    Debug.getInstance().log("Scene save failed: " + path, Debug.DEBUG_LEVEL_ERROR);
+                }
             }
         }
 
@@ -207,9 +230,63 @@ namespace Shard.GUI
 
             if (ImGui.BeginMenu("File"))
             {
+                bool canSave = !Bootstrap.IsPlayMode();
+                if (!canSave)
+                {
+                    ImGui.BeginDisabled();
+                }
+
+                if (ImGui.MenuItem("Load Scene"))
+                {
+                    string path = Bootstrap.getScenePath();
+                    bool ok = GameObjectManager.getInstance().LoadSceneFromFile(path);
+
+                    if (ok)
+                    {
+                        Bootstrap.setScenePath(path);
+                        _inspector.SelectedObject = null;
+                        Debug.getInstance().log("Scene loaded: " + path);
+                    }
+                    else
+                    {
+                        Debug.getInstance().log("Scene load failed: " + path, Debug.DEBUG_LEVEL_WARNING);
+                    }
+                }
+
+                if (ImGui.MenuItem("Save Scene", "Ctrl+S"))
+                {
+                    string path = Bootstrap.getScenePath();
+                    bool ok = GameObjectManager.getInstance().SaveSceneToFile(path);
+
+                    if (ok)
+                    {
+                        Debug.getInstance().log("Scene saved: " + path);
+                    }
+                    else
+                    {
+                        Debug.getInstance().log("Scene save failed: " + path, Debug.DEBUG_LEVEL_ERROR);
+                    }
+                }
+
+                if (!canSave)
+                {
+                    ImGui.EndDisabled();
+                }
+
                 if (ImGui.MenuItem("Exit"))
                 {
                     Bootstrap.requestQuit();
+                }
+
+                ImGui.EndMenu();
+            }
+
+            if (ImGui.BeginMenu("Run"))
+            {
+                bool play = Bootstrap.IsPlayMode();
+                if (ImGui.MenuItem(play ? "Stop" : "Start", "F5"))
+                {
+                    Bootstrap.TogglePlayMode();
                 }
 
                 ImGui.EndMenu();
@@ -241,6 +318,9 @@ namespace Shard.GUI
 
                 ImGui.EndMenu();
             }
+
+            ImGui.Separator();
+            ImGui.TextUnformatted(Bootstrap.IsPlayMode() ? "PLAY" : "EDIT");
 
             ImGui.EndMenuBar();
         }

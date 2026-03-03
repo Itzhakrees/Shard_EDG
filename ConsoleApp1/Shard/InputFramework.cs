@@ -107,6 +107,18 @@ namespace Shard
                 if (ev.type == SDL.SDL_EventType.SDL_KEYDOWN)
                 {
                     ie.Key = (int)ev.key.keysym.scancode;
+
+                    // Global editor shortcut: toggle fullscreen without relying on GUI menu visibility.
+                    bool isF11 = ev.key.keysym.scancode == SDL.SDL_Scancode.SDL_SCANCODE_F11;
+                    bool isAltEnter =
+                        ev.key.keysym.scancode == SDL.SDL_Scancode.SDL_SCANCODE_RETURN &&
+                        (((SDL.SDL_Keymod)ev.key.keysym.mod & SDL.SDL_Keymod.KMOD_ALT) != 0);
+
+                    if (isF11 || isAltEnter)
+                    {
+                        Bootstrap.getDisplay().toggleFullscreen();
+                    }
+
                     Debug.getInstance().log("Keydown: " + ie.Key);
                     informListeners(ie, "KeyDown");
                 }

@@ -148,6 +148,10 @@ namespace Shard
         {
         }
 
+        public virtual void editorUpdate()
+        {
+        }
+
         public GameObject()
         {
             GameObjectManager.getInstance().addGameObject(this);
@@ -186,6 +190,24 @@ namespace Shard
 
         public virtual void killMe()
         {
+            // Scene switches destroy objects; listeners must be detached to avoid cross-scene input bleed.
+            InputSystem input = Bootstrap.getInput();
+            if (input != null)
+            {
+                if (this is InputListener objectListener)
+                {
+                    input.removeListener(objectListener);
+                }
+
+                foreach (Component c in components)
+                {
+                    if (c is InputListener componentListener)
+                    {
+                        input.removeListener(componentListener);
+                    }
+                }
+            }
+
             PhysicsManager.getInstance().removePhysicsObject(myBody);
 
             myBody = null;

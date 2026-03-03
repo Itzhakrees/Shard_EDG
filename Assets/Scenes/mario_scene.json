@@ -1,0 +1,132 @@
+{
+  "Objects": [
+    {
+      "TypeName": "Shard.GameObject",
+      "X": 0,
+      "Y": 0,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": "D:\\Folk\\Shard_EDG\\Assets\\background2.jpg",
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": [],
+      "FieldValues": {}
+    },
+    {
+      "TypeName": "GameTest.PlatformerPlayer",
+      "X": 120,
+      "Y": 640,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": "D:\\Folk\\Shard_EDG\\Assets\\player.png",
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": [],
+      "FieldValues": {}
+    },
+    {
+      "TypeName": "Shard.Cube2D",
+      "X": 3,
+      "Y": 866,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": "D:\\Folk\\Shard_EDG\\Assets\\platform.png",
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": [],
+      "FieldValues": {
+        "Width": "1928",
+        "Height": "98",
+        "ColorR": "220",
+        "ColorG": "80",
+        "ColorB": "40"
+      }
+    },
+    {
+      "TypeName": "Shard.Cube2D",
+      "X": 300,
+      "Y": 777,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": "D:\\Folk\\Shard_EDG\\Assets\\platform.png",
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": [],
+      "FieldValues": {
+        "Width": "295",
+        "Height": "24",
+        "ColorR": "220",
+        "ColorG": "80",
+        "ColorB": "40"
+      }
+    },
+    {
+      "TypeName": "Shard.Cube2D",
+      "X": 560,
+      "Y": 691,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": "D:\\Folk\\Shard_EDG\\Assets\\platform.png",
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": [],
+      "FieldValues": {
+        "Width": "315",
+        "Height": "24",
+        "ColorR": "220",
+        "ColorG": "80",
+        "ColorB": "40"
+      }
+    },
+    {
+      "TypeName": "Shard.Cube2D",
+      "X": 888,
+      "Y": 616,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": "D:\\Folk\\Shard_EDG\\Assets\\platform.png",
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": [],
+      "FieldValues": {
+        "Width": "327",
+        "Height": "24",
+        "ColorR": "220",
+        "ColorG": "80",
+        "ColorB": "40"
+      }
+    },
+    {
+      "TypeName": "Shard.Cube2D",
+      "X": 1216,
+      "Y": 554,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": null,
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": [],
+      "FieldValues": {
+        "Width": "347",
+        "Height": "24",
+        "ColorR": "220",
+        "ColorG": "80",
+        "ColorB": "40"
+      }
+    }
+  ]
+}

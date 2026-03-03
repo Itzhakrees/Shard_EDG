@@ -1,0 +1,58 @@
+{
+  "Objects": [
+    {
+      "TypeName": "Shard.GameObject",
+      "X": 0,
+      "Y": 0,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": "D:\\Folk\\Shard_EDG\\assets\\background2.jpg",
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": []
+    },
+    {
+      "TypeName": "GameTest.Spaceship",
+      "X": 500,
+      "Y": 500,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": "D:\\Folk\\Shard_EDG\\assets\\spaceship.png",
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": []
+    },
+    {
+      "TypeName": "Shard.GameObject",
+      "X": 0,
+      "Y": 0,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": null,
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": [
+        "Shard.SpawnerComponent"
+      ]
+    },
+    {
+      "TypeName": "Shard.GameObject",
+      "X": 0,
+      "Y": 0,
+      "Rotz": 0,
+      "Scalex": 1,
+      "Scaley": 1,
+      "SpritePath": null,
+      "Visible": false,
+      "Transient": false,
+      "ParentIndex": -1,
+      "ComponentTypeNames": []
+    }
+  ]
+}
