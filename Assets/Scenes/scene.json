@@ -1,45 +1,675 @@
-{
-  "Objects": [
-    {
-      "TypeName": "Shard.GameObject",
-      "X": 0,
-      "Y": 0,
-      "Rotz": 0,
-      "Scalex": 1,
-      "Scaley": 1,
-      "SpritePath": "D:\\Folk\\Shard_EDG\\Assets\\background2.jpg",
-      "Visible": false,
-      "Transient": false,
-      "ParentIndex": -1,
-      "ComponentTypeNames": []
-    },
-    {
-      "TypeName": "GameTest.Spaceship",
-      "X": 500,
-      "Y": 500,
-      "Rotz": 0,
-      "Scalex": 1,
-      "Scaley": 1,
-      "SpritePath": "D:\\Folk\\Shard_EDG\\Assets\\spaceship.png",
-      "Visible": false,
-      "Transient": false,
-      "ParentIndex": -1,
-      "ComponentTypeNames": []
-    },
-    {
-      "TypeName": "Shard.GameObject",
-      "X": 0,
-      "Y": 0,
-      "Rotz": 0,
-      "Scalex": 1,
-      "Scaley": 1,
-      "SpritePath": null,
-      "Visible": false,
-      "Transient": false,
-      "ParentIndex": -1,
-      "ComponentTypeNames": [
-        "Shard.SpawnerComponent"
-      ]
-    }
-  ]
+﻿{
+    "Objects":  [
+                    {
+                        "TypeName":  "Shard.GameObject",
+                        "X":  0,
+                        "Y":  0,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  "D:\\Folk\\Shard_EDG\\Assets\\background2.jpg",
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutPaddle",
+                        "X":  850,
+                        "Y":  980,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "220",
+                                            "Height":  "26",
+                                            "ColorR":  "80",
+                                            "ColorG":  "150",
+                                            "ColorB":  "230",
+                                            "MoveSpeed":  "640"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBall",
+                        "X":  960,
+                        "Y":  964,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Speed":  "8.5",
+                                            "DirectionX":  "0.72",
+                                            "DirectionY":  "-0.72",
+                                            "Radius":  "10"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  340,
+                        "Y":  140,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "220",
+                                            "ColorG":  "85",
+                                            "ColorB":  "70",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  506,
+                        "Y":  140,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "220",
+                                            "ColorG":  "105",
+                                            "ColorB":  "70",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  672,
+                        "Y":  140,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "220",
+                                            "ColorG":  "125",
+                                            "ColorB":  "70",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  838,
+                        "Y":  140,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "220",
+                                            "ColorG":  "145",
+                                            "ColorB":  "70",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1004,
+                        "Y":  140,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "220",
+                                            "ColorG":  "165",
+                                            "ColorB":  "70",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1170,
+                        "Y":  140,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "220",
+                                            "ColorG":  "185",
+                                            "ColorB":  "70",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1336,
+                        "Y":  140,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "220",
+                                            "ColorG":  "205",
+                                            "ColorB":  "70",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1502,
+                        "Y":  140,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "220",
+                                            "ColorG":  "225",
+                                            "ColorB":  "70",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  340,
+                        "Y":  190,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "210",
+                                            "ColorG":  "100",
+                                            "ColorB":  "90",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  506,
+                        "Y":  190,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "210",
+                                            "ColorG":  "120",
+                                            "ColorB":  "90",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  672,
+                        "Y":  190,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "210",
+                                            "ColorG":  "140",
+                                            "ColorB":  "90",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  838,
+                        "Y":  190,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "210",
+                                            "ColorG":  "160",
+                                            "ColorB":  "90",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1004,
+                        "Y":  190,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "210",
+                                            "ColorG":  "180",
+                                            "ColorB":  "90",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1170,
+                        "Y":  190,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "210",
+                                            "ColorG":  "200",
+                                            "ColorB":  "90",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1336,
+                        "Y":  190,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "210",
+                                            "ColorG":  "220",
+                                            "ColorB":  "90",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1502,
+                        "Y":  190,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "210",
+                                            "ColorG":  "240",
+                                            "ColorB":  "90",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  340,
+                        "Y":  240,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "190",
+                                            "ColorG":  "120",
+                                            "ColorB":  "120",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  506,
+                        "Y":  240,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "190",
+                                            "ColorG":  "140",
+                                            "ColorB":  "120",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  672,
+                        "Y":  240,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "190",
+                                            "ColorG":  "160",
+                                            "ColorB":  "120",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  838,
+                        "Y":  240,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "190",
+                                            "ColorG":  "180",
+                                            "ColorB":  "120",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1004,
+                        "Y":  240,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "190",
+                                            "ColorG":  "200",
+                                            "ColorB":  "120",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1170,
+                        "Y":  240,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "190",
+                                            "ColorG":  "220",
+                                            "ColorB":  "120",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1336,
+                        "Y":  240,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "190",
+                                            "ColorG":  "240",
+                                            "ColorB":  "120",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBrick",
+                        "X":  1502,
+                        "Y":  240,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "96",
+                                            "Height":  "28",
+                                            "ColorR":  "190",
+                                            "ColorG":  "255",
+                                            "ColorB":  "120",
+                                            "Hits":  "1"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBoundary",
+                        "X":  0,
+                        "Y":  0,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "1920",
+                                            "Height":  "12"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBoundary",
+                        "X":  0,
+                        "Y":  0,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "12",
+                                            "Height":  "1080"
+                                        }
+                    },
+                    {
+                        "TypeName":  "GameTest.BreakoutBoundary",
+                        "X":  1908,
+                        "Y":  0,
+                        "Rotz":  0,
+                        "Scalex":  1,
+                        "Scaley":  1,
+                        "SpritePath":  null,
+                        "Visible":  false,
+                        "Transient":  false,
+                        "ParentIndex":  -1,
+                        "ComponentTypeNames":  [
+
+                                               ],
+                        "FieldValues":  {
+                                            "Width":  "12",
+                                            "Height":  "1080"
+                                        }
+                    }
+                ]
 }
