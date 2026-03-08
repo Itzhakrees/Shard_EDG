@@ -9,8 +9,9 @@ namespace GameDemo
         public float vy = 0;
 
         public bool Won = false;
+        public bool IsSliding => sliding;
 
-        public const float HalfSize = 49f;
+        public const float HalfSize = 45f;
 
         bool sliding = false;
 
@@ -36,7 +37,14 @@ namespace GameDemo
                 float targetX = Transform.X + vx;
                 float targetY = Transform.Y + vy;
 
-                if (CollidesWithWall(targetX, targetY))
+                // 先判 goal：碰到就赢，但不真正走进去
+                if (CollidesWithGoal(targetX, targetY))
+                {
+                    Won = true;
+                    stopSliding();
+                }
+                // 再判 wall：撞墙就停，也不走进去
+                else if (CollidesWithWall(targetX, targetY))
                 {
                     stopSliding();
                 }
@@ -44,15 +52,6 @@ namespace GameDemo
                 {
                     Transform.X = targetX;
                     Transform.Y = targetY;
-                }
-
-                Goal goal = FindGoal();
-                if (goal != null && IsOverlapping(
-                        Transform.X, Transform.Y, HalfSize,
-                        goal.Transform.X, goal.Transform.Y, Goal.HalfSize))
-                {
-                    Won = true;
-                    stopSliding();
                 }
             }
 
@@ -107,6 +106,17 @@ namespace GameDemo
             }
 
             return false;
+        }
+
+        private bool CollidesWithGoal(float x, float y)
+        {
+            Goal goal = FindGoal();
+            if (goal == null)
+            {
+                return false;
+            }
+
+            return IsOverlapping(x, y, HalfSize, goal.Transform.X, goal.Transform.Y, Goal.HalfSize);
         }
 
         private bool IsOverlapping(float x1, float y1, float h1, float x2, float y2, float h2)
