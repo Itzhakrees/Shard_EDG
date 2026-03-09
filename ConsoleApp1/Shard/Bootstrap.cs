@@ -336,6 +336,7 @@ namespace Shard
             }
         }
 
+        [STAThread]
         static void Main(string[] args)
         {
             long timeInMillisecondsStart, lastTick, timeInMillisecondsEnd;

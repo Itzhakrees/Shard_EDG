@@ -236,7 +236,12 @@ namespace Shard.GUI
                     ImGui.BeginDisabled();
                 }
 
-                if (ImGui.MenuItem("Load Scene"))
+                if (ImGui.MenuItem("Select Scene"))
+                {
+                    OpenSceneSelectionDialog();
+                }
+
+                if (ImGui.MenuItem("Reload Scene"))
                 {
                     string path = Bootstrap.getScenePath();
                     bool ok = GameObjectManager.getInstance().LoadSceneFromFile(path);
@@ -399,6 +404,48 @@ namespace Shard.GUI
             else
             {
                 SDL.SDL_SetWindowFullscreen(_window, (uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP);
+            }
+        }
+
+        private void OpenSceneSelectionDialog()
+        {
+            if (Bootstrap.IsPlayMode())
+            {
+                Debug.getInstance().log("Cannot load scene while in PLAY mode. Stop first.", Debug.DEBUG_LEVEL_WARNING);
+                return;
+            }
+
+            try 
+            {
+                using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
+                {
+                    openFileDialog.InitialDirectory = Path.Combine(Bootstrap.getBaseDir(), "Assets", "Scenes");
+                    openFileDialog.Filter = "Scene files (*.json)|*.json";
+                    openFileDialog.FilterIndex = 1;
+                    openFileDialog.RestoreDirectory = true;
+
+                    if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        string filePath = openFileDialog.FileName;
+                        
+                        bool ok = GameObjectManager.getInstance().LoadSceneFromFile(filePath);
+
+                        if (ok)
+                        {
+                            Bootstrap.setScenePath(filePath);
+                            _inspector.SelectedObject = null;
+                            Debug.getInstance().log("Scene loaded: " + filePath);
+                        }
+                        else
+                        {
+                            Debug.getInstance().log("Scene load failed: " + filePath, Debug.DEBUG_LEVEL_ERROR);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                 Debug.getInstance().log("Error opening file dialog: " + ex.Message, Debug.DEBUG_LEVEL_ERROR);
             }
         }
 
