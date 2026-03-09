@@ -13,18 +13,25 @@ namespace GameTest
         private bool jumpQueued;
         private bool grounded;
         private float verticalVelocity;
+        private bool facingRight = true;
+        private float animTimer;
+        private int animFrame = 1;
 
         private const float MoveSpeed = 260f;
         private const float JumpVelocity = 430f;
         private const float Gravity = 900f;
         private const float FastDropGravityMul = 1.7f;
         private const float MaxFallSpeed = 820f;
+        private const float WalkAnimInterval = 0.09f;
 
         public override void initialize()
         {
-            Transform.SpritePath = Bootstrap.getAssetManager().getAssetPath("player.png");
+            Transform.SpritePath = Bootstrap.getAssetManager().getAssetPath("right1.png");
             grounded = false;
             verticalVelocity = 0f;
+            animTimer = 0f;
+            animFrame = 1;
+            facingRight = true;
 
             addTag("Player");
             Bootstrap.getInput().addListener(this);
@@ -32,6 +39,7 @@ namespace GameTest
 
         public override void update()
         {
+            UpdateAnimation();
             Bootstrap.getDisplay().addToDraw(this);
         }
 
@@ -101,6 +109,48 @@ namespace GameTest
 
         public void onCollisionStay(PhysicsBody x)
         {
+        }
+
+        private void UpdateAnimation()
+        {
+            bool movingLeftOnly = moveLeft && !moveRight;
+            bool movingRightOnly = moveRight && !moveLeft;
+            bool walking = movingLeftOnly || movingRightOnly;
+
+            if (movingLeftOnly)
+            {
+                facingRight = false;
+            }
+            else if (movingRightOnly)
+            {
+                facingRight = true;
+            }
+
+            if (walking)
+            {
+                animTimer += (float)Bootstrap.getDeltaTime();
+                if (animTimer >= WalkAnimInterval)
+                {
+                    animTimer -= WalkAnimInterval;
+                    animFrame += 1;
+                    if (animFrame > 4)
+                    {
+                        animFrame = 1;
+                    }
+                }
+            }
+            else
+            {
+                animTimer = 0f;
+                animFrame = 1;
+            }
+
+            string frameName = (facingRight ? "right" : "left") + animFrame + ".png";
+            string path = Bootstrap.getAssetManager().getAssetPath(frameName);
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                Transform.SpritePath = path;
+            }
         }
 
         private void ResolveHorizontalCollisions()
