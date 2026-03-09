@@ -4,6 +4,7 @@ using SDL2;
 using System.Collections.Generic;
 using System.Numerics;
 using System.IO;
+using System.Threading;
 
 namespace Shard.GUI
 {
@@ -26,6 +27,8 @@ namespace Shard.GUI
         private Viewport _viewport;
         private ContentBrowser _contentBrowser;
         private ConsolePanel _consolePanel;
+        
+        private string _pendingSceneLoadPath = null;
 
         public GameObject DragDropObject { get; set; }
 
@@ -120,6 +123,25 @@ namespace Shard.GUI
         public void Render()
         {
             if (_renderer == null) return;
+
+            // Check for pending scene load from the file dialog thread
+            if (_pendingSceneLoadPath != null)
+            {
+                string path = _pendingSceneLoadPath;
+                _pendingSceneLoadPath = null;
+                
+                bool ok = GameObjectManager.getInstance().LoadSceneFromFile(path);
+                if (ok)
+                {
+                    Bootstrap.setScenePath(path);
+                    _inspector.SelectedObject = null;
+                    Debug.getInstance().log("Scene loaded: " + path);
+                }
+                else
+                {
+                    Debug.getInstance().log("Scene load failed: " + path, Debug.DEBUG_LEVEL_ERROR);
+                }
+            }
 
             _renderer.NewFrame();
             HandleEditorShortcuts();
@@ -415,38 +437,51 @@ namespace Shard.GUI
                 return;
             }
 
-            try 
+            // Start file dialog thread
+            Thread t = new Thread(() => 
             {
-                using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
+                try 
                 {
-                    openFileDialog.InitialDirectory = Path.Combine(Bootstrap.getBaseDir(), "Assets", "Scenes");
-                    openFileDialog.Filter = "Scene files (*.json)|*.json";
-                    openFileDialog.FilterIndex = 1;
-                    openFileDialog.RestoreDirectory = true;
-
-                    if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    // This sleep helps ensure the thread has time to initialize its message loop if needed, 
+                    // though for ShowDialog it's usually automatic.
+                    // However, sometimes quick thread execution can be weird with COM.
+                    
+                    // Also check if we need to Application.Run() or just ShowDialog.
+                    // ShowDialog handles its own message loop.
+                    
+                    string selectedPath = null;
+                    using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
                     {
-                        string filePath = openFileDialog.FileName;
-                        
-                        bool ok = GameObjectManager.getInstance().LoadSceneFromFile(filePath);
+                        openFileDialog.InitialDirectory = Path.Combine(Bootstrap.getBaseDir(), "Assets", "Scenes");
+                        openFileDialog.Filter = "Scene files (*.json)|*.json";
+                        openFileDialog.FilterIndex = 1;
+                        openFileDialog.RestoreDirectory = true;
+                        openFileDialog.AutoUpgradeEnabled = true; // Ensure new style dialogs
 
-                        if (ok)
+                        if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                         {
-                            Bootstrap.setScenePath(filePath);
-                            _inspector.SelectedObject = null;
-                            Debug.getInstance().log("Scene loaded: " + filePath);
-                        }
-                        else
-                        {
-                            Debug.getInstance().log("Scene load failed: " + filePath, Debug.DEBUG_LEVEL_ERROR);
+                            selectedPath = openFileDialog.FileName;
                         }
                     }
+
+                    if (selectedPath != null)
+                    {
+                        _pendingSceneLoadPath = selectedPath;
+                    }
+                    else
+                    {
+                        // Don't log on cancel to avoid spam if user just closes it
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                 Debug.getInstance().log("Error opening file dialog: " + ex.Message, Debug.DEBUG_LEVEL_ERROR);
-            }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error in file dialog: " + ex.Message);
+                }
+            });
+            
+            t.SetApartmentState(ApartmentState.STA);
+            t.IsBackground = true; // Make it a background thread so it doesn't prevent app exit
+            t.Start();
         }
 
         public Inspector GetInspector() => _inspector;
