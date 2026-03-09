@@ -6,9 +6,13 @@ namespace Shard.GUI
 {
     class SceneHierarchy
     {
+        private GameObject _clipboardSource;
+
         public void Draw()
         {
             ImGui.Begin("Scene Hierarchy");
+
+            HandleCopyPasteShortcuts();
 
             var objects = GameObjectManager.getInstance().GetGameObjects();
 
@@ -32,6 +36,49 @@ namespace Shard.GUI
                     Cube2D cube = new Cube2D();
                     cube.Transform.X = 200;
                     cube.Transform.Y = 200;
+                }
+
+                ImGui.Separator();
+
+                bool hasSelection = GuiManager.Instance.GetInspector().SelectedObject != null;
+                if (!hasSelection)
+                {
+                    ImGui.BeginDisabled();
+                }
+                if (ImGui.MenuItem("Copy Selected", "Ctrl+C"))
+                {
+                    _clipboardSource = GuiManager.Instance.GetInspector().SelectedObject;
+                }
+                if (!hasSelection)
+                {
+                    ImGui.EndDisabled();
+                }
+
+                bool canPaste = _clipboardSource != null && _clipboardSource.Transform != null;
+                if (!canPaste)
+                {
+                    ImGui.BeginDisabled();
+                }
+                if (ImGui.MenuItem("Paste", "Ctrl+V"))
+                {
+                    PasteClipboard();
+                }
+                if (!canPaste)
+                {
+                    ImGui.EndDisabled();
+                }
+
+                if (!hasSelection)
+                {
+                    ImGui.BeginDisabled();
+                }
+                if (ImGui.MenuItem("Delete Selected", "Del"))
+                {
+                    DeleteSelected();
+                }
+                if (!hasSelection)
+                {
+                    ImGui.EndDisabled();
                 }
                 ImGui.EndPopup();
             }
@@ -106,6 +153,62 @@ namespace Shard.GUI
                 if (IsDescendant(child.Owner, potentialChild)) return true;
             }
             return false;
+        }
+
+        private void HandleCopyPasteShortcuts()
+        {
+            if (!ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows))
+            {
+                return;
+            }
+
+            ImGuiIOPtr io = ImGui.GetIO();
+            if (io.KeyCtrl && ImGui.IsKeyPressed(ImGuiKey.C, false))
+            {
+                _clipboardSource = GuiManager.Instance.GetInspector().SelectedObject;
+            }
+
+            if (io.KeyCtrl && ImGui.IsKeyPressed(ImGuiKey.V, false))
+            {
+                PasteClipboard();
+            }
+
+            if (ImGui.IsKeyPressed(ImGuiKey.Delete, false))
+            {
+                DeleteSelected();
+            }
+        }
+
+        private void PasteClipboard()
+        {
+            if (_clipboardSource == null || _clipboardSource.Transform == null)
+            {
+                return;
+            }
+
+            GameObject pasted = GameObjectManager.getInstance().DuplicateObject(_clipboardSource, 24f, 24f);
+            if (pasted != null)
+            {
+                _clipboardSource = pasted;
+                GuiManager.Instance.GetInspector().SelectedObject = pasted;
+            }
+        }
+
+        private void DeleteSelected()
+        {
+            GameObject selected = GuiManager.Instance.GetInspector().SelectedObject;
+            if (selected == null)
+            {
+                return;
+            }
+
+            if (_clipboardSource == selected)
+            {
+                _clipboardSource = null;
+            }
+
+            GameObjectManager.getInstance().DestroyObjectTree(selected);
+            GuiManager.Instance.GetInspector().SelectedObject = null;
         }
     }
 }

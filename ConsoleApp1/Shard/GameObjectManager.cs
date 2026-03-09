@@ -305,6 +305,54 @@ namespace Shard
             return instantiateFromTypeName(typeName);
         }
 
+        public GameObject DuplicateObject(GameObject source, float offsetX = 20f, float offsetY = 20f)
+        {
+            if (source == null || source.Transform == null)
+            {
+                return null;
+            }
+
+            SceneObjectData state = createState(source);
+            GameObject clone = instantiateFromTypeName(state.TypeName);
+            if (clone == null)
+            {
+                return null;
+            }
+
+            applyState(clone, state);
+            restoreComponents(clone, state);
+
+            clone.Transform.X += offsetX;
+            clone.Transform.Y += offsetY;
+            clone.Transform.Parent = source.Transform.Parent;
+
+            return clone;
+        }
+
+        public void DestroyObjectTree(GameObject root)
+        {
+            if (root == null || root.Transform == null)
+            {
+                return;
+            }
+
+            List<GameObject> children = new List<GameObject>();
+            foreach (Transform3D child in root.Transform.Children)
+            {
+                if (child != null && child.Owner != null)
+                {
+                    children.Add(child.Owner);
+                }
+            }
+
+            foreach (GameObject childObj in children)
+            {
+                DestroyObjectTree(childObj);
+            }
+
+            removeGameObjectImmediate(root);
+        }
+
         private SceneData BuildSceneData()
         {
             SceneData scene = new SceneData();
