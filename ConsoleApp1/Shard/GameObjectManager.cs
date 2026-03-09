@@ -391,7 +391,7 @@ namespace Shard
                 Rotz = gob.Transform.Rotz,
                 Scalex = gob.Transform.Scalex,
                 Scaley = gob.Transform.Scaley,
-                SpritePath = gob.Transform.SpritePath,
+                SpritePath = toScenePath(gob.Transform.SpritePath),
                 Visible = gob.Visible,
                 Transient = gob.Transient,
                 ParentIndex = -1,
@@ -407,12 +407,77 @@ namespace Shard
             gob.Transform.Rotz = state.Rotz;
             gob.Transform.Scalex = state.Scalex;
             gob.Transform.Scaley = state.Scaley;
-            gob.Transform.SpritePath = state.SpritePath;
+            gob.Transform.SpritePath = fromScenePath(state.SpritePath);
             gob.Visible = state.Visible;
             gob.Transient = state.Transient;
             gob.ToBeDestroyed = false;
             gob.Transform.Parent = null;
             applySerializableFields(gob, state.FieldValues);
+        }
+
+        private string toScenePath(string spritePath)
+        {
+            if (string.IsNullOrWhiteSpace(spritePath))
+            {
+                return spritePath;
+            }
+
+            try
+            {
+                if (!Path.IsPathRooted(spritePath))
+                {
+                    return spritePath.Replace('/', Path.DirectorySeparatorChar);
+                }
+
+                string baseDir = Bootstrap.getBaseDir();
+                if (string.IsNullOrWhiteSpace(baseDir))
+                {
+                    return spritePath;
+                }
+
+                string fullBase = Path.GetFullPath(baseDir).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                string fullSprite = Path.GetFullPath(spritePath);
+
+                StringComparison cmp = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+                if (fullSprite.StartsWith(fullBase + Path.DirectorySeparatorChar, cmp) || string.Equals(fullSprite, fullBase, cmp))
+                {
+                    return Path.GetRelativePath(fullBase, fullSprite);
+                }
+
+                return spritePath;
+            }
+            catch
+            {
+                return spritePath;
+            }
+        }
+
+        private string fromScenePath(string spritePath)
+        {
+            if (string.IsNullOrWhiteSpace(spritePath))
+            {
+                return spritePath;
+            }
+
+            try
+            {
+                if (Path.IsPathRooted(spritePath))
+                {
+                    return spritePath;
+                }
+
+                string baseDir = Bootstrap.getBaseDir();
+                if (string.IsNullOrWhiteSpace(baseDir))
+                {
+                    return spritePath;
+                }
+
+                return Path.GetFullPath(Path.Combine(baseDir, spritePath));
+            }
+            catch
+            {
+                return spritePath;
+            }
         }
 
         private Dictionary<string, string> captureSerializableFields(GameObject gob)
